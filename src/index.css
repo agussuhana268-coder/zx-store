@@ -692,9 +692,18 @@ a {
 }
 
 .footer-logo {
-  font-size: 18px;
-  font-weight: 800;
-  margin-bottom: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.footer-logo-img {
+  height: 36px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .footer-tagline {
