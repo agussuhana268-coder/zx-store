@@ -29,7 +29,7 @@ export default function VortexShowcase() {
           <h2 className="vortex-showcase-title">ZX VORTEX</h2>
 
           <p className="vortex-showcase-description">
-            Produk terbaru dari ekosistem ZX.
+            Produk terbaru dari ZetXiters Company.
           </p>
 
           <button
