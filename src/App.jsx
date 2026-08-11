@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import ProductCard from './components/ProductCard';
 import OrderModal from './components/OrderModal';
+import WhyChooseZX from './components/WhyChooseZX';
 import AboutSupport from './components/AboutSupport';
 import Footer from './components/Footer';
 import { products } from './data/products';
@@ -66,6 +67,8 @@ export default function App() {
             ))}
           </div>
         </section>
+
+        <WhyChooseZX />
 
         <AboutSupport />
       </main>
