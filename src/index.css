@@ -406,6 +406,64 @@ a {
   flex-shrink: 0;
 }
 
+.features-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.extra-features-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.extra-features-wrapper.is-expanded {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.extra-features-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.extra-features-inner .product-features {
+  padding-top: 10px;
+}
+
+.expand-toggle-btn {
+  background: transparent;
+  border: none;
+  padding: 10px 0 0;
+  margin-top: 4px;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  align-self: flex-start;
+  transition: color 0.15s ease, opacity 0.15s ease;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.expand-toggle-btn:hover {
+  color: var(--primary-hover);
+}
+
+.chevron-icon {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.chevron-icon.rotated {
+  transform: rotate(180deg);
+}
+
 .btn-primary {
   width: 100%;
   background-color: var(--primary);

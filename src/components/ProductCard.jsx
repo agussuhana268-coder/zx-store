@@ -1,8 +1,16 @@
-import { Check, ArrowRight, ShieldCheck } from 'lucide-react';
+import { useState } from 'react';
+import { Check, ArrowRight, ShieldCheck, ChevronDown } from 'lucide-react';
 
 export default function ProductCard({ product, index, onSelectProduct }) {
-  const hasFeatures = Array.isArray(product.features) && product.features.length > 0;
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const features = Array.isArray(product.features) ? product.features : [];
+  const hasFeatures = features.length > 0;
+  const canExpand = features.length > 7;
   const delayStyle = index !== undefined ? { transitionDelay: `${index * 80}ms` } : undefined;
+
+  const initialFeatures = features.slice(0, 7);
+  const extraFeatures = features.slice(7);
 
   return (
     <div className="product-card reveal" style={delayStyle}>
@@ -32,14 +40,43 @@ export default function ProductCard({ product, index, onSelectProduct }) {
         <hr className="card-divider" />
 
         {hasFeatures && (
-          <ul className="product-features">
-            {product.features.map((feature, index) => (
-              <li key={index} className="product-feature-item">
-                <Check size={16} className="feature-check" />
-                <span>{feature}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="features-container">
+            <ul className="product-features">
+              {initialFeatures.map((feature, idx) => (
+                <li key={idx} className="product-feature-item">
+                  <Check size={16} className="feature-check" />
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
+
+            {canExpand && (
+              <>
+                <div className={`extra-features-wrapper ${isExpanded ? 'is-expanded' : ''}`}>
+                  <div className="extra-features-inner">
+                    <ul className="product-features">
+                      {extraFeatures.map((feature, idx) => (
+                        <li key={idx + 7} className="product-feature-item">
+                          <Check size={16} className="feature-check" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className="expand-toggle-btn"
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  aria-expanded={isExpanded}
+                >
+                  <span>{isExpanded ? 'Sembunyikan' : 'Lihat selengkapnya'}</span>
+                  <ChevronDown size={14} className={`chevron-icon ${isExpanded ? 'rotated' : ''}`} />
+                </button>
+              </>
+            )}
+          </div>
         )}
       </div>
 
