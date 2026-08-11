@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import ProductCard from './components/ProductCard';
 import OrderModal from './components/OrderModal';
 import WhyChooseZX from './components/WhyChooseZX';
+import HowItWorks from './components/HowItWorks';
 import AboutSupport from './components/AboutSupport';
 import Footer from './components/Footer';
 import { products } from './data/products';
@@ -76,6 +77,8 @@ export default function App() {
           </section>
 
           <WhyChooseZX />
+
+          <HowItWorks />
 
           <AboutSupport />
         </main>
