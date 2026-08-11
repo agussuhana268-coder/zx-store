@@ -1,4 +1,4 @@
-import { Check, ArrowRight } from 'lucide-react';
+import { Check, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export default function ProductCard({ product, index, onSelectProduct }) {
   const hasFeatures = Array.isArray(product.features) && product.features.length > 0;
@@ -9,9 +9,15 @@ export default function ProductCard({ product, index, onSelectProduct }) {
       <div className="product-card-top">
         <div className="product-header">
           <h3 className="product-name">{product.name}</h3>
-          {product.badge && (
-            <span className="popular-badge">{product.badge}</span>
-          )}
+          <div className="product-badges-stack">
+            {product.badge && (
+              <span className="popular-badge">{product.badge}</span>
+            )}
+            <span className="duration-badge">
+              <ShieldCheck size={11} className="duration-badge-icon" />
+              PERMANEN
+            </span>
+          </div>
         </div>
 
         <div className="product-price">{product.price}</div>
