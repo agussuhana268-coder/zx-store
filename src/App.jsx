@@ -4,6 +4,7 @@ import SecondaryNav from './components/SecondaryNav';
 import Hero from './components/Hero';
 import ProductCard from './components/ProductCard';
 import OrderModal from './components/OrderModal';
+import VortexShowcase from './components/VortexShowcase';
 import WhyChooseZX from './components/WhyChooseZX';
 import HowItWorks from './components/HowItWorks';
 import AboutSupport from './components/AboutSupport';
@@ -75,6 +76,8 @@ export default function App() {
               ))}
             </div>
           </section>
+
+          <VortexShowcase />
 
           <WhyChooseZX />
 

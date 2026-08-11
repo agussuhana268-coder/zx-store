@@ -392,6 +392,118 @@ a {
   transform: scale(0.99);
 }
 
+/* ZX VORTEX Showcase Section */
+.vortex-showcase-section {
+  margin-bottom: 56px;
+}
+
+.vortex-showcase-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 40px 36px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 36px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  overflow: hidden;
+}
+
+.vortex-showcase-card:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+.vortex-showcase-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.vortex-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: var(--primary);
+  background-color: var(--primary-light);
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.eyebrow-icon {
+  color: var(--primary);
+}
+
+.vortex-showcase-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+  line-height: 1.15;
+}
+
+.vortex-showcase-description {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.vortex-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--primary);
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 22px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0, 64, 232, 0.2);
+}
+
+.vortex-cta-btn:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 64, 232, 0.3);
+}
+
+.vortex-cta-btn:active {
+  transform: scale(0.98);
+}
+
+.vortex-showcase-media {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.vortex-banner-img {
+  width: 100%;
+  height: auto;
+  max-height: 320px;
+  object-fit: contain;
+  border-radius: 16px;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  display: block;
+}
+
+.vortex-showcase-card:hover .vortex-banner-img {
+  transform: scale(1.02);
+}
+
 /* Why Choose ZX Section */
 .why-choose-section {
   margin-bottom: 56px;
@@ -757,6 +869,30 @@ a {
   
   .products-grid {
     grid-template-columns: 1fr;
+  }
+
+  .vortex-showcase-card {
+    grid-template-columns: 1fr;
+    padding: 24px 20px;
+    gap: 24px;
+    text-align: center;
+  }
+
+  .vortex-showcase-content {
+    align-items: center;
+  }
+
+  .vortex-showcase-title {
+    font-size: 24px;
+  }
+
+  .vortex-showcase-description {
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+
+  .vortex-banner-img {
+    max-height: 240px;
   }
 
   .benefits-grid {
