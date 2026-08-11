@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="site-footer">
+    <footer className="site-footer reveal">
       <div className="footer-logo">ZX</div>
       <div className="footer-tagline">ZETXITERS MARKET</div>
       <div className="footer-copyright">

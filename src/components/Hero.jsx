@@ -1,6 +1,6 @@
 export default function Hero() {
   return (
-    <section className="hero-section">
+    <section className="hero-section reveal">
       <img src={`${import.meta.env.BASE_URL}assets/zx_tr.png`} alt="ZX" className="hero-logo-img" />
       <div className="hero-subtitle">ZETXITERS MARKET</div>
       <p className="hero-description">

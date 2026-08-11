@@ -1,10 +1,11 @@
 import { Check, ArrowRight } from 'lucide-react';
 
-export default function ProductCard({ product, onSelectProduct }) {
+export default function ProductCard({ product, index, onSelectProduct }) {
   const hasFeatures = Array.isArray(product.features) && product.features.length > 0;
+  const delayStyle = index !== undefined ? { transitionDelay: `${index * 80}ms` } : undefined;
 
   return (
-    <div className="product-card">
+    <div className="product-card reveal" style={delayStyle}>
       <div className="product-card-top">
         <div className="product-header">
           <h3 className="product-name">{product.name}</h3>

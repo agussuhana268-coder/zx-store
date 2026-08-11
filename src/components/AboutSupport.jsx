@@ -3,7 +3,7 @@ import { MessageCircle, Headset } from 'lucide-react';
 export default function AboutSupport() {
   return (
     <section className="info-grid">
-      <div className="info-card">
+      <div className="info-card reveal">
         <h3>Tentang ZetX Company</h3>
         <p>
           ZetX Company adalah Perusahaan digital product dari MdzzXiters yang berfokus pada produk
@@ -11,7 +11,7 @@ export default function AboutSupport() {
         </p>
       </div>
 
-      <div className="info-card">
+      <div className="info-card reveal" style={{ transitionDelay: '80ms' }}>
         <h3>Butuh bantuan?</h3>
         <p>Tim support kami siap membantu.</p>
         <div className="support-links">
