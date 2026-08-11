@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Header from './components/Header';
+import SecondaryNav from './components/SecondaryNav';
 import Hero from './components/Hero';
 import ProductCard from './components/ProductCard';
 import OrderModal from './components/OrderModal';
@@ -44,36 +45,43 @@ export default function App() {
   };
 
   return (
-    <div className="container">
-      <Header />
+    <div className="app-container">
+      <div className="container">
+        <Header />
+      </div>
 
-      <main>
-        <Hero />
+      <SecondaryNav />
 
-        <section className="products-section">
-          <h2 className="section-title reveal">Katalog Produk</h2>
-          <p className="section-subtitle reveal">
-            Pilih produk yang sesuai dengan kebutuhan kamu.
-          </p>
+      <div className="container">
+        <main>
+          <Hero />
 
-          <div className="products-grid">
-            {products.map((product, index) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                index={index}
-                onSelectProduct={openOrderModal}
-              />
-            ))}
-          </div>
-        </section>
+          <section id="products-catalog" className="products-section">
+            <h2 className="section-title reveal">Katalog Produk</h2>
+            <p className="section-subtitle reveal">
+              Pilih produk yang sesuai dengan kebutuhan kamu.
+            </p>
 
-        <WhyChooseZX />
+            <div className="products-grid">
+              {products.map((product, index) => (
+                <div key={product.id} id={product.id} className="product-card-wrapper">
+                  <ProductCard
+                    product={product}
+                    index={index}
+                    onSelectProduct={openOrderModal}
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
 
-        <AboutSupport />
-      </main>
+          <WhyChooseZX />
 
-      <Footer />
+          <AboutSupport />
+        </main>
+
+        <Footer />
+      </div>
 
       {selectedProduct && (
         <OrderModal
