@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Check, ArrowRight, ShieldCheck, ChevronDown } from 'lucide-react';
+import { Check, ArrowRight, ShieldCheck, ChevronDown, Sparkles } from 'lucide-react';
+import { calculateSavings, PROMOTION_CONFIG } from '../data/products';
 
-export default function ProductCard({ product, index, onSelectProduct }) {
+export default function ProductCard({ product, index, isPromo, onSelectProduct }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const features = Array.isArray(product.features) ? product.features : [];
@@ -12,12 +13,21 @@ export default function ProductCard({ product, index, onSelectProduct }) {
   const initialFeatures = features.slice(0, 7);
   const extraFeatures = features.slice(7);
 
+  const hasActivePromo = Boolean(isPromo && product.promoPrice);
+  const savings = hasActivePromo ? calculateSavings(product.price, product.promoPrice) : null;
+
   return (
     <div className="product-card reveal" style={delayStyle}>
       <div className="product-card-top">
         <div className="product-header">
           <h3 className="product-name">{product.name}</h3>
           <div className="product-badges-stack">
+            {hasActivePromo && (
+              <span className="promo-badge">
+                <Sparkles size={10} className="promo-badge-icon" />
+                {PROMOTION_CONFIG.badgeText || 'TODAY ONLY'}
+              </span>
+            )}
             {product.badge && (
               <span className="popular-badge">{product.badge}</span>
             )}
@@ -28,7 +38,17 @@ export default function ProductCard({ product, index, onSelectProduct }) {
           </div>
         </div>
 
-        <div className="product-price">{product.price}</div>
+        {hasActivePromo ? (
+          <div className="product-pricing">
+            <div className="product-price-row">
+              <span className="product-price-original">{product.price}</span>
+              <span className="product-price">{product.promoPrice}</span>
+            </div>
+            {savings && <div className="product-savings">{savings}</div>}
+          </div>
+        ) : (
+          <div className="product-price">{product.price}</div>
+        )}
 
         {product.slots && (
           <div className="product-slots">

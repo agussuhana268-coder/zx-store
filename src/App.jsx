@@ -9,10 +9,19 @@ import WhyChooseZX from './components/WhyChooseZX';
 import HowItWorks from './components/HowItWorks';
 import AboutSupport from './components/AboutSupport';
 import Footer from './components/Footer';
-import { products } from './data/products';
+import { products, isPromotionActive } from './data/products';
 
 export default function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isPromo, setIsPromo] = useState(isPromotionActive);
+
+  useEffect(() => {
+    setIsPromo(isPromotionActive());
+    const interval = setInterval(() => {
+      setIsPromo(isPromotionActive());
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const revealElements = document.querySelectorAll('.reveal');
@@ -70,6 +79,7 @@ export default function App() {
                   <ProductCard
                     product={product}
                     index={index}
+                    isPromo={isPromo}
                     onSelectProduct={openOrderModal}
                   />
                 </div>
@@ -92,6 +102,7 @@ export default function App() {
       {selectedProduct && (
         <OrderModal
           product={selectedProduct}
+          isPromo={isPromo}
           onCloseModal={closeOrderModal}
         />
       )}

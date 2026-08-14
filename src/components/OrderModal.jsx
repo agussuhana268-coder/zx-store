@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Send } from 'lucide-react';
 
-export default function OrderModal({ product, onCloseModal }) {
+export default function OrderModal({ product, onCloseModal, isPromo }) {
   const [customerName, setCustomerName] = useState('');
   const [customerContact, setCustomerContact] = useState('');
   const [errors, setErrors] = useState({ name: '', contact: '' });
@@ -18,8 +18,11 @@ export default function OrderModal({ product, onCloseModal }) {
 
   if (!product) return null;
 
+  const hasActivePromo = Boolean(isPromo && product.promoPrice);
+  const effectivePrice = hasActivePromo ? product.promoPrice : product.price;
+
   const normalizePhone = (phone) => {
-    let cleaned = phone.replace(/[\s\-\(\)]/g, '');
+    let cleaned = phone.replace(/[\s\-()]/g, '');
     if (cleaned.startsWith('+62')) {
       cleaned = '0' + cleaned.slice(3);
     } else if (cleaned.startsWith('62')) {
@@ -67,7 +70,7 @@ export default function OrderModal({ product, onCloseModal }) {
       `Nama Lengkap: ${nameTrimmed}`,
       `No. WhatsApp: ${normalizedPhone}`,
       `Produk: ${product.name}`,
-      `Harga: ${product.price}`,
+      `Harga: ${effectivePrice}`,
       '',
       'Mohon informasi mengenai proses pembayaran dan aktivasi produk.',
       '',
@@ -103,7 +106,16 @@ export default function OrderModal({ product, onCloseModal }) {
               <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{product.slots}</div>
             )}
           </div>
-          <div className="summary-price">{product.price}</div>
+          <div className="summary-price-container">
+            {hasActivePromo ? (
+              <>
+                <span className="summary-price-original">{product.price}</span>
+                <span className="summary-price">{product.promoPrice}</span>
+              </>
+            ) : (
+              <div className="summary-price">{product.price}</div>
+            )}
+          </div>
         </div>
 
         <form onSubmit={handleOrderSubmit} noValidate>
