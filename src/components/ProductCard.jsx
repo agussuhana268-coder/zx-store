@@ -40,11 +40,11 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
 
         {hasActivePromo ? (
           <div className="product-pricing">
-            <div className="product-price-row">
+            <div className="product-price">{product.promoPrice}</div>
+            <div className="product-price-sub">
               <span className="product-price-original">{product.price}</span>
-              <span className="product-price">{product.promoPrice}</span>
+              {savings && <span className="product-savings">{savings}</span>}
             </div>
-            {savings && <div className="product-savings">{savings}</div>}
           </div>
         ) : (
           <div className="product-price">{product.price}</div>

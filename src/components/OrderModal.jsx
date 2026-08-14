@@ -109,8 +109,8 @@ export default function OrderModal({ product, onCloseModal, isPromo }) {
           <div className="summary-price-container">
             {hasActivePromo ? (
               <>
-                <span className="summary-price-original">{product.price}</span>
                 <span className="summary-price">{product.promoPrice}</span>
+                <span className="summary-price-original">{product.price}</span>
               </>
             ) : (
               <div className="summary-price">{product.price}</div>
