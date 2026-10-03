@@ -53,7 +53,7 @@ export const NEXUS_INFO = {
 export const products = [
   {
     id: 'nexus-injector',
-    name: 'NEXUS INJECTOR v2.0',
+    name: 'NEXUS INJECTOR',
     version: 'v2.0',
     price: 'Rp60.000',
     promoPrice: null,

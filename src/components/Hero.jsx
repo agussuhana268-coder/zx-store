@@ -15,7 +15,7 @@ export default function Hero() {
     <section className="company-hero-section reveal">
       <div className="company-badge-pill">
         <span className="badge-dot"></span>
-        <span>MDZZXITERS • OFFICIAL COMPANY STORE</span>
+        <span>MDZZXITERS • OFFICIAL STORE</span>
       </div>
 
       <h1 className="company-hero-heading">
@@ -75,7 +75,7 @@ export default function Hero() {
           </div>
           <div className="highlight-content">
             <span className="highlight-title">Dukungan Versi OS</span>
-            <span className="highlight-desc">ANDROID 11 - 16+ (NEW VERSION)</span>
+            <span className="highlight-desc">ANDROID 11 - 17+ (NEW VERSION)</span>
           </div>
         </div>
 
