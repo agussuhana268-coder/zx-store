@@ -17,14 +17,6 @@ export default function Header() {
         </a>
       </div>
 
-      <nav className="header-nav" aria-label="Navigasi Utama">
-        <a href="#about-company" className="nav-link">Tentang Kami</a>
-        <a href="#products-catalog" className="nav-link">Katalog Produk</a>
-        <a href="#company-benefits" className="nav-link">Keunggulan</a>
-        <a href="#order-guide" className="nav-link">Cara Order</a>
-        <a href="#support" className="nav-link">Bantuan</a>
-      </nav>
-
       <div className="header-cta-wrap">
         <a
           href="https://wa.me/6287833947151?text=Halo%20Admin%20Zet%20Xiters,%20saya%20ingin%20konsultasi%20layanan%20ZetXiters"

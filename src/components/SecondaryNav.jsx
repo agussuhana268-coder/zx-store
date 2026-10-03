@@ -14,7 +14,7 @@ const navItems = [
   },
   {
     id: 'company-benefits',
-    name: 'Keunggulan ZetXiters',
+    name: 'Keunggulan',
     icon: ShieldCheck,
   },
   {
@@ -24,7 +24,7 @@ const navItems = [
   },
   {
     id: 'support',
-    name: 'Pusat Bantuan',
+    name: 'Bantuan',
     icon: Headphones,
   },
 ];
@@ -93,7 +93,7 @@ export default function SecondaryNav() {
   }, []);
 
   useEffect(() => {
-    if (navRef.current) {
+    if (navRef.current && navRef.current.scrollWidth > navRef.current.clientWidth) {
       const activeBtn = navRef.current.querySelector('.sec-nav-btn.active');
       if (activeBtn) {
         activeBtn.scrollIntoView({
