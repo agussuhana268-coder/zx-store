@@ -10,17 +10,19 @@ export default function Footer() {
                 alt="ZetXiters"
                 className="footer-logo-image"
               />
-              <span className="footer-brand-heading">ZETXITERS MARKET</span>
+              <span className="footer-brand-heading">ZETXITERS COMPANY</span>
             </div>
             <p className="footer-brand-subtitle">
-              Sistem optimasi dan konfigurasi terstruktur untuk gaming kompetitif Android.
+              Divisi produk digital resmi dari MDZZXITERS yang berdedikasi menyediakan solusi optimasi gaming Android yang aman, stabil, dan terpercaya.
             </p>
           </div>
 
-          <div className="footer-badge-side">
-            <span className="footer-compat-badge">
-              ANDROID 11 - 16+ (NEW VERSION)
-            </span>
+          <div className="footer-links-side">
+            <a href="#about-company" className="footer-link">Tentang Kami</a>
+            <a href="#products-catalog" className="footer-link">Katalog Produk</a>
+            <a href="#company-benefits" className="footer-link">Keunggulan</a>
+            <a href="#order-guide" className="footer-link">Cara Order</a>
+            <a href="#support" className="footer-link">Pusat Bantuan</a>
           </div>
         </div>
 
@@ -28,13 +30,9 @@ export default function Footer() {
           <p className="footer-copy">
             © 2026 <strong>MDZZXITERS</strong>. All rights reserved.
           </p>
-          <div className="footer-nav-tags">
-            <span>Nexus Injector v2.0</span>
-            <span className="tag-dot">•</span>
-            <span>Non-Root Architecture</span>
-            <span className="tag-dot">•</span>
-            <span>Zero Permanent System Change</span>
-          </div>
+          <p className="footer-legal-note">
+            Seluruh transaksi dan distribusi resmi dikelola langsung melalui saluran komunikasi resmi ZetXiters.
+          </p>
         </div>
       </div>
     </footer>

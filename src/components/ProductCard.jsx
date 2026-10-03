@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Check, ArrowRight, ShieldCheck, ChevronDown, Smartphone } from 'lucide-react';
+import { Check, ArrowRight, ShieldCheck, ChevronDown, Smartphone, Info } from 'lucide-react';
 import { calculateSavings } from '../data/products';
 
 export default function ProductCard({ product, index, isPromo, onSelectProduct }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showFullDesc, setShowFullDesc] = useState(false);
 
   const features = Array.isArray(product.features) ? product.features : [];
   const initialCount = 8;
@@ -15,33 +16,43 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
 
   const hasActivePromo = Boolean(isPromo && product.promoPrice);
   const savings = hasActivePromo ? calculateSavings(product.price, product.promoPrice) : null;
-  const isNexus = product.id === 'nexus-injector';
 
   return (
-    <div className={`pricing-card reveal ${isNexus ? 'featured-pricing-card' : ''}`} style={delayStyle}>
+    <div className="pricing-card reveal" style={delayStyle}>
       <div className="card-top-content">
         <div className="card-header-row">
           <div>
             <h3 className="card-product-title">{product.name}</h3>
-            {product.compatibility ? (
+            {product.compatibility && (
               <div className="card-compat-pill">
                 <Smartphone size={12} />
                 <span>{product.compatibility}</span>
               </div>
-            ) : (
-              <span className="card-version-text">{product.version || 'v1.0'}</span>
             )}
           </div>
-          <div className="card-badge-container">
-            {isNexus && <span className="badge-featured">REKOMENDASI</span>}
-            {product.badge && !isNexus && <span className="badge-standard">{product.badge}</span>}
-          </div>
+          {product.badge && (
+            <div className="card-badge-container">
+              <span className="badge-standard">{product.badge}</span>
+            </div>
+          )}
         </div>
 
         {product.description && (
-          <p className="card-description-text">
-            {product.description}
-          </p>
+          <div className="card-description-box">
+            <p className={`card-description-text ${showFullDesc ? 'expanded' : ''}`}>
+              {product.description}
+            </p>
+            {product.description.length > 150 && (
+              <button
+                type="button"
+                className="btn-toggle-desc"
+                onClick={() => setShowFullDesc(!showFullDesc)}
+              >
+                <Info size={12} />
+                <span>{showFullDesc ? 'Sembunyikan deskripsi' : 'Selengkapnya'}</span>
+              </button>
+            )}
+          </div>
         )}
 
         <div className="card-price-block">
@@ -72,7 +83,7 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
         <hr className="card-separator" />
 
         <div className="card-features-block">
-          <span className="features-label">Fitur yang disertakan:</span>
+          <span className="features-label">Fitur yang disertakan ({features.length}):</span>
           <ul className="features-list">
             {initialFeatures.map((feat, i) => (
               <li key={i} className="feature-line">
@@ -101,7 +112,7 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
                 onClick={() => setIsExpanded(!isExpanded)}
                 aria-expanded={isExpanded}
               >
-                <span>{isExpanded ? 'Sembunyikan' : `+${extraFeatures.length} Fitur Tambahan`}</span>
+                <span>{isExpanded ? 'Tutup Fitur' : `+${extraFeatures.length} Fitur Lainnya`}</span>
                 <ChevronDown size={14} className={`toggle-icon ${isExpanded ? 'rotate' : ''}`} />
               </button>
             </>
@@ -111,10 +122,10 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
 
       <button
         type="button"
-        className={`btn-card-order ${isNexus ? 'primary' : 'secondary'}`}
+        className="btn-card-order primary"
         onClick={() => onSelectProduct(product)}
       >
-        <span>Beli Lisensi Sekarang</span>
+        <span>Pesan {product.name}</span>
         <ArrowRight size={15} />
       </button>
     </div>

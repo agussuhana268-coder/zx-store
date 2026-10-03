@@ -90,6 +90,7 @@ export const products = [
     slots: 'Tersedia 10 slot',
     badge: 'VIP EDITION',
     license: 'PERMANEN / LIFETIME',
+    compatibility: 'ANDROID 11 - 16+ (NEW VERSION)',
     description: 'Solusi tuning kelas atas dengan panel injector vortex khusus, thermal stability, dan aimlock assist terintegrasi.',
     features: [
       'Panel Injector Vortex Setting',

@@ -1,41 +1,36 @@
 import { useState, useEffect, useRef } from 'react';
-import { LayoutGrid, Cpu, Info, Sliders, Crown, CheckCircle2 } from 'lucide-react';
+import { Building2, Package, ShieldCheck, HelpCircle, Headphones } from 'lucide-react';
 
 const navItems = [
   {
+    id: 'about-company',
+    name: 'Tentang Kami',
+    icon: Building2,
+  },
+  {
     id: 'products-catalog',
     name: 'Katalog Produk',
-    icon: LayoutGrid,
+    icon: Package,
   },
   {
-    id: 'nexus-injector',
-    name: 'Nexus Injector v2.0',
-    icon: Cpu,
+    id: 'company-benefits',
+    name: 'Keunggulan ZetXiters',
+    icon: ShieldCheck,
   },
   {
-    id: 'nexus-info',
-    name: 'Tentang Sistem',
-    icon: Info,
-  },
-  {
-    id: 'nexus-features',
-    name: '16 Fitur',
-    icon: Sliders,
-  },
-  {
-    id: 'zx-vortex',
-    name: 'ZX VORTEX',
-    icon: Crown,
-  },
-  {
-    id: 'how-it-works',
+    id: 'order-guide',
     name: 'Cara Order',
-    icon: CheckCircle2,
+    icon: HelpCircle,
+  },
+  {
+    id: 'support',
+    name: 'Pusat Bantuan',
+    icon: Headphones,
   },
 ];
 
 export default function SecondaryNav() {
-  const [activeId, setActiveId] = useState('products-catalog');
+  const [activeId, setActiveId] = useState('about-company');
   const navRef = useRef(null);
   const isManualScroll = useRef(false);
 
@@ -46,7 +41,7 @@ export default function SecondaryNav() {
     const element = document.getElementById(id);
     if (element) {
       const navElement = document.querySelector('.secondary-nav-wrapper');
-      const navHeight = navElement ? navElement.offsetHeight : 54;
+      const navHeight = navElement ? navElement.offsetHeight : 52;
       const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
       const offsetPosition = elementPosition - navHeight - 16;
 
@@ -58,7 +53,7 @@ export default function SecondaryNav() {
 
     setTimeout(() => {
       isManualScroll.current = false;
-    }, 700);
+    }, 600);
   };
 
   useEffect(() => {
@@ -66,24 +61,23 @@ export default function SecondaryNav() {
       if (isManualScroll.current) return;
 
       const navElement = document.querySelector('.secondary-nav-wrapper');
-      const navHeight = navElement ? navElement.offsetHeight : 54;
+      const navHeight = navElement ? navElement.offsetHeight : 52;
 
       const sectionIds = [
+        'about-company',
         'products-catalog',
-        'nexus-injector',
-        'nexus-info',
-        'nexus-features',
-        'zx-vortex',
-        'how-it-works',
+        'company-benefits',
+        'order-guide',
+        'support',
       ];
 
-      let currentActive = 'products-catalog';
+      let currentActive = 'about-company';
 
       for (const id of sectionIds) {
         const el = document.getElementById(id);
         if (el) {
           const top = el.getBoundingClientRect().top;
-          if (top <= navHeight + 120) {
+          if (top <= navHeight + 140) {
             currentActive = id;
           }
         }
@@ -100,7 +94,7 @@ export default function SecondaryNav() {
 
   useEffect(() => {
     if (navRef.current) {
-      const activeBtn = navRef.current.querySelector('.secondary-nav-item.active');
+      const activeBtn = navRef.current.querySelector('.sec-nav-btn.active');
       if (activeBtn) {
         activeBtn.scrollIntoView({
           behavior: 'smooth',
@@ -113,8 +107,8 @@ export default function SecondaryNav() {
 
   return (
     <div className="secondary-nav-wrapper">
-      <div className="secondary-nav-container">
-        <nav className="secondary-nav-bar" ref={navRef} aria-label="Navigasi cepat produk">
+      <div className="secondary-nav-inner">
+        <nav className="secondary-nav-track" ref={navRef} aria-label="Navigasi bagian halaman">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeId === item.id;
@@ -122,12 +116,12 @@ export default function SecondaryNav() {
               <button
                 key={item.id}
                 type="button"
-                className={`secondary-nav-item ${isActive ? 'active' : ''}`}
+                className={`sec-nav-btn ${isActive ? 'active' : ''}`}
                 onClick={() => scrollToElement(item.id)}
               >
-                <Icon size={14} className="nav-icon" />
-                <span className="nav-label">{item.name}</span>
-                {isActive && <span className="nav-active-bar" />}
+                <Icon size={14} className="sec-nav-icon" />
+                <span>{item.name}</span>
+                {isActive && <span className="sec-active-indicator" />}
               </button>
             );
           })}

@@ -1,57 +1,57 @@
-import { ShieldCheck, Cpu, Zap, Headphones, Sparkles, Smartphone } from 'lucide-react';
+import { ShieldCheck, Smartphone, Zap, CheckCircle, Sparkles, Headphones } from 'lucide-react';
 
-const benefits = [
+const companyBenefits = [
   {
     icon: ShieldCheck,
-    title: 'Non-Permanent Injection',
-    description: 'Konfigurasi diterapkan secara terkontrol tanpa mengubah partisi OS Android secara permanen sehingga perangkat tetap aman.',
-    tag: 'Keamanan Sistem',
+    title: 'Keamanan Sistem Terjamin',
+    description: 'Seluruh konfigurasi ZetXiters dirancang berjalan tanpa memerlukan akses root dan tanpa mengubah partisi OS Android secara permanen.',
+    tag: 'Keamanan',
   },
   {
     icon: Smartphone,
-    title: 'Support Versi Android Terbaru',
-    description: 'Kompatibel penuh untuk perangkat ANDROID 11 - 16+ (NEW VERSION) tanpa perlu akses root atau Unlock Bootloader (UBL).',
+    title: 'Kompatibilitas Versi Android',
+    description: 'Teruji dan kompatibel penuh pada perangkat ANDROID 11 - 16+ (NEW VERSION) lintas berbagai brand smartphone dan chipset.',
     tag: 'Kompatibilitas',
   },
   {
-    icon: Cpu,
-    title: 'Nexus Engine Core',
-    description: 'Semua instruksi game diproses terlebih dahulu melalui Nexus Engine guna menyeimbangkan alokasi CPU, GPU, dan frame pacing.',
-    tag: 'Arsitektur',
+    icon: Zap,
+    title: 'Optimalisasi Terkalibrasi',
+    description: 'Fokus pada peningkatan respon sentuhan layar, pengurangan touch latency, dan stabilitas frame rate game yang konsisten.',
+    tag: 'Performa',
   },
   {
-    icon: Zap,
-    title: 'Zero Latency & Anti Delay',
-    description: 'Sampling rate layar dioptimasi agar respon input sentuhan jari bereaksi seketika tanpa ada jeda atau delay.',
-    tag: 'Performa Sentuhan',
+    icon: CheckCircle,
+    title: 'Pengiriman Digital Instan',
+    description: 'File lisensi dan paket aplikasi dikirimkan secara instan dan aman langsung melalui WhatsApp resmi ZetXiters.',
+    tag: 'Layanan Cepat',
   },
   {
     icon: Sparkles,
-    title: 'Lisensi Permanen / Sekali Bayar',
-    description: 'Hanya Rp60.000 berlaku selamanya, termasuk dukungan pembaruan konfigurasi berkala saat ada update game.',
-    tag: 'Biaya Terjangkau',
+    title: 'Lisensi Permanen',
+    description: 'Sistem pembelian satu kali tanpa biaya langganan bulanan tersembunyi, berlaku seumur hidup (lifetime).',
+    tag: 'Sekali Bayar',
   },
   {
     icon: Headphones,
-    title: 'Layanan Bantuan Resmi 24/7',
-    description: 'Didukung panduan instalasi lengkap dan konsultasi teknis langsung dengan tim support via WhatsApp.',
-    tag: 'Support Admin',
+    title: 'Pendampingan Teknis Resmi',
+    description: 'Didukung panduan tutorial lengkap serta tim teknis ZetXiters yang siap membantu kendala pemasangan hingga berhasil.',
+    tag: 'Support Resmi',
   },
 ];
 
 export default function WhyChooseZX() {
   return (
-    <section className="benefits-section reveal">
+    <section id="company-benefits" className="benefits-section reveal">
       <div className="section-head">
-        <span className="section-pretitle">KEUNGGULAN SISTEM</span>
-        <h2 className="section-main-title">Mengapa Memilih Nexus Injector & ZetXiters?</h2>
+        <span className="section-pretitle">STANDAR KUALITAS KAMI</span>
+        <h2 className="section-main-title">Keunggulan Layanan ZetXiters</h2>
         <p className="section-subtext">
-          Solusi terpercaya yang mengedepankan keamanan perangkat, performa kompetitif, dan kemudahan penggunaan.
+          Alasan mengapa ribuan pengguna mempercayakan optimasi gaming Android mereka kepada ZetXiters Company.
         </p>
       </div>
 
       <div className="benefits-card-grid">
-        {benefits.map((item, index) => {
+        {companyBenefits.map((item, index) => {
           const Icon = item.icon;
           return (
             <div

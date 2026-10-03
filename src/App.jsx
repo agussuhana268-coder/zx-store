@@ -2,10 +2,9 @@ import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import SecondaryNav from './components/SecondaryNav';
 import Hero from './components/Hero';
-import NexusShowcase from './components/NexusShowcase';
+import AboutCompany from './components/AboutCompany';
 import ProductCard from './components/ProductCard';
 import OrderModal from './components/OrderModal';
-import VortexShowcase from './components/VortexShowcase';
 import WhyChooseZX from './components/WhyChooseZX';
 import HowItWorks from './components/HowItWorks';
 import AboutSupport from './components/AboutSupport';
@@ -56,8 +55,6 @@ export default function App() {
     setSelectedProduct(null);
   };
 
-  const nexusProduct = products.find((p) => p.id === 'nexus-injector') || products[0];
-
   return (
     <div className="app-wrapper">
       <div className="site-width-container">
@@ -68,16 +65,16 @@ export default function App() {
 
       <div className="site-width-container">
         <main className="main-content-flow">
-          <Hero onSelectNexus={() => openOrderModal(nexusProduct)} />
+          <Hero />
 
-          <NexusShowcase onSelectNexus={() => openOrderModal(nexusProduct)} />
+          <AboutCompany />
 
           <section id="products-catalog" className="catalog-section reveal">
             <div className="section-head">
-              <span className="section-pretitle">PILIHAN LISENSI RESMI</span>
-              <h2 className="section-main-title">Katalog Produk & Paket</h2>
+              <span className="section-pretitle">KATALOG RESMI ZETXITERS</span>
+              <h2 className="section-main-title">Pilihan Produk & Lisensi Sistem</h2>
               <p className="section-subtext">
-                Pilih paket lisensi permanen sesuai dengan perangkat dan konfigurasi yang kamu inginkan.
+                ZetXiters menghadirkan dua varian konfigurasi sistem Android terstruktur untuk kestabilan dan performa kompetitif.
               </p>
             </div>
 
@@ -94,8 +91,6 @@ export default function App() {
               ))}
             </div>
           </section>
-
-          <VortexShowcase />
 
           <WhyChooseZX />
 

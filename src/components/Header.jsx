@@ -3,37 +3,37 @@ import { MessageCircle } from 'lucide-react';
 export default function Header() {
   return (
     <header className="site-header">
-      <div className="header-left">
-        <a href="#root" className="brand-logo-link">
+      <div className="header-brand-wrap">
+        <a href="#root" className="brand-anchor" aria-label="ZetXiters Official">
           <img
             src={`${import.meta.env.BASE_URL}assets/zx_tr.png`}
-            alt="ZetXiters Logo"
+            alt="ZetXiters"
             className="brand-logo-img"
           />
-          <div className="brand-text-group">
-            <span className="brand-name">ZETXITERS</span>
-            <span className="brand-tagline">OFFICIAL STORE</span>
+          <div className="brand-headings">
+            <span className="brand-title">ZETXITERS</span>
+            <span className="brand-sub">COMPANY STORE</span>
           </div>
         </a>
-        <span className="brand-version-badge">v2.0</span>
       </div>
 
-      <nav className="header-nav-links">
-        <a href="#nexus-info" className="header-nav-link">Tentang Nexus</a>
-        <a href="#nexus-features" className="header-nav-link">16 Fitur</a>
-        <a href="#products-catalog" className="header-nav-link">Katalog</a>
-        <a href="#how-it-works" className="header-nav-link">Cara Order</a>
+      <nav className="header-nav" aria-label="Navigasi Utama">
+        <a href="#about-company" className="nav-link">Tentang Kami</a>
+        <a href="#products-catalog" className="nav-link">Katalog Produk</a>
+        <a href="#company-benefits" className="nav-link">Keunggulan</a>
+        <a href="#order-guide" className="nav-link">Cara Order</a>
+        <a href="#support" className="nav-link">Bantuan</a>
       </nav>
 
-      <div className="header-right">
+      <div className="header-cta-wrap">
         <a
-          href="https://wa.me/6287833947151?text=Halo%20Admin%20Zet%20Xiters,%20saya%20ingin%20konsultasi%20Nexus%20Injector%20v2.0"
+          href="https://wa.me/6287833947151?text=Halo%20Admin%20Zet%20Xiters,%20saya%20ingin%20konsultasi%20layanan%20ZetXiters"
           target="_blank"
           rel="noopener noreferrer"
-          className="header-cta-btn"
+          className="header-whatsapp-btn"
         >
           <MessageCircle size={15} />
-          <span>Hubungi Admin</span>
+          <span>Hubungi Kami</span>
         </a>
       </div>
     </header>

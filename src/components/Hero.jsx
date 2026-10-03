@@ -1,99 +1,91 @@
-import { ArrowRight, ShieldCheck, Cpu, Smartphone, Zap } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Smartphone, CheckCircle, Award } from 'lucide-react';
 
-export default function Hero({ onSelectNexus }) {
-  const scrollToSection = (id) => {
+export default function Hero() {
+  const scrollTo = (id) => {
     const el = document.getElementById(id);
     if (el) {
-      const navElement = document.querySelector('.secondary-nav-wrapper');
-      const navHeight = navElement ? navElement.offsetHeight : 60;
-      const elementPosition = el.getBoundingClientRect().top + window.pageYOffset;
-      const offsetPosition = elementPosition - navHeight - 16;
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      });
+      const nav = document.querySelector('.secondary-nav-wrapper');
+      const offset = nav ? nav.offsetHeight : 52;
+      const top = el.getBoundingClientRect().top + window.pageYOffset - offset - 16;
+      window.scrollTo({ top, behavior: 'smooth' });
     }
   };
 
   return (
-    <section className="hero-section reveal">
-      {/* Clean Release Badge */}
-      <div className="hero-version-pill">
-        <span className="pill-status-dot"></span>
-        <span className="pill-title">Nexus Injector v2.0</span>
-        <span className="pill-divider">|</span>
-        <span className="pill-tag">Support ANDROID 11 - 16+ (NEW VERSION)</span>
+    <section className="company-hero-section reveal">
+      <div className="company-badge-pill">
+        <span className="badge-dot"></span>
+        <span>MDZZXITERS • OFFICIAL COMPANY STORE</span>
       </div>
 
-      <h1 className="hero-headline">
-        Optimasi Performa Gaming Android <br className="hero-break" />
-        <span className="hero-headline-highlight">Tingkat Sistem Terstruktur</span>
+      <h1 className="company-hero-heading">
+        Penyedia Solusi & Tools Optimasi <br className="hero-break" />
+        <span className="heading-accent">Gaming Android Terpercaya</span>
       </h1>
 
-      <p className="hero-lead">
-        Didukung <strong>Nexus Engine</strong> yang memproses dan menerapkan konfigurasi secara
-        terkontrol ke lingkungan game tanpa mengubah sistem secara permanen. Dirancang untuk stabilitas,
-        respon sentuhan instan, dan akurasi tinggi.
+      <p className="company-hero-description">
+        <strong>ZetXiters Company</strong> mengembangkan produk konfigurasi sistem terstruktur yang dirancang
+        untuk menghadirkan akurasi tinggi, respon sentuhan instan, dan kestabilan performa gaming tanpa
+        mengubah sistem perangkat secara permanen.
       </p>
 
-      <div className="hero-action-buttons">
+      <div className="company-hero-actions">
         <button
           type="button"
-          className="btn-hero-primary"
-          onClick={onSelectNexus}
+          className="btn-company-primary"
+          onClick={() => scrollTo('products-catalog')}
         >
-          <span>Beli Lisensi Rp60.000</span>
+          <span>Lihat Katalog Produk Resmi</span>
           <ArrowRight size={16} />
         </button>
 
         <button
           type="button"
-          className="btn-hero-secondary"
-          onClick={() => scrollToSection('nexus-info')}
+          className="btn-company-secondary"
+          onClick={() => scrollTo('about-company')}
         >
-          <span>Pelajari Sistem & Arsitektur</span>
+          <span>Tentang ZetXiters</span>
         </button>
       </div>
 
-      {/* Professional Specification Grid */}
-      <div className="hero-specs-grid">
-        <div className="hero-spec-item">
-          <div className="spec-icon-box">
-            <Smartphone size={18} />
+      <div className="company-highlights-row">
+        <div className="company-highlight-card">
+          <div className="highlight-icon-wrap">
+            <Award size={18} />
           </div>
-          <div className="spec-text">
-            <span className="spec-label">Kompatibilitas</span>
-            <strong className="spec-val">ANDROID 11 - 16+ (NEW VERSION)</strong>
+          <div className="highlight-content">
+            <span className="highlight-title">Pengembang Resmi</span>
+            <span className="highlight-desc">Divisi resmi dari MDZZXITERS</span>
           </div>
         </div>
 
-        <div className="hero-spec-item">
-          <div className="spec-icon-box">
+        <div className="company-highlight-card">
+          <div className="highlight-icon-wrap">
             <ShieldCheck size={18} />
           </div>
-          <div className="spec-text">
-            <span className="spec-label">Keamanan Sistem</span>
-            <strong className="spec-val">Non-Permanent / Non-Root</strong>
+          <div className="highlight-content">
+            <span className="highlight-title">Non-Permanent Safe</span>
+            <span className="highlight-desc">Tanpa root & aman partisi sistem</span>
           </div>
         </div>
 
-        <div className="hero-spec-item">
-          <div className="spec-icon-box">
-            <Cpu size={18} />
+        <div className="company-highlight-card">
+          <div className="highlight-icon-wrap">
+            <Smartphone size={18} />
           </div>
-          <div className="spec-text">
-            <span className="spec-label">Modul Optimasi</span>
-            <strong className="spec-val">16 Fitur Terintegrasi</strong>
+          <div className="highlight-content">
+            <span className="highlight-title">Dukungan Versi OS</span>
+            <span className="highlight-desc">ANDROID 11 - 16+ (NEW VERSION)</span>
           </div>
         </div>
 
-        <div className="hero-spec-item">
-          <div className="spec-icon-box">
-            <Zap size={18} />
+        <div className="company-highlight-card">
+          <div className="highlight-icon-wrap">
+            <CheckCircle size={18} />
           </div>
-          <div className="spec-text">
-            <span className="spec-label">Harga & Lisensi</span>
-            <strong className="spec-val">Rp60.000 (Permanen/Lifetime)</strong>
+          <div className="highlight-content">
+            <span className="highlight-title">Aktivasi Instan</span>
+            <span className="highlight-desc">Pengiriman file via WhatsApp resmi</span>
           </div>
         </div>
       </div>

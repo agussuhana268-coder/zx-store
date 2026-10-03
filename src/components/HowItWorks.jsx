@@ -3,38 +3,38 @@ import { MousePointerClick, FileText, MessageCircle, CheckCircle2 } from 'lucide
 const steps = [
   {
     step: '01',
-    title: 'Pilih Lisensi',
-    description: 'Pilih produk Nexus Injector v2.0 (Rp60.000) atau produk sesuai kebutuhan perangkat kamu.',
+    title: 'Pilih Produk di Katalog',
+    description: 'Tentukan produk yang sesuai dengan spesifikasi perangkat dan kebutuhan Anda dari katalog resmi ZetXiters.',
     icon: MousePointerClick,
   },
   {
     step: '02',
-    title: 'Isi Data Pemesan',
-    description: 'Masukkan nama lengkap dan nomor WhatsApp aktif pada formulir pemesanan cepat.',
+    title: 'Lengkapi Data Pemesanan',
+    description: 'Klik tombol pesan dan masukkan nama lengkap serta nomor WhatsApp aktif Anda pada formulir.',
     icon: FileText,
   },
   {
     step: '03',
     title: 'Konfirmasi via WhatsApp',
-    description: 'Pesan pemesanan terformat otomatis akan langsung diteruskan ke WhatsApp Admin resmi.',
+    description: 'Detail pesanan terformat otomatis akan diteruskan langsung ke WhatsApp resmi Admin ZetXiters.',
     icon: MessageCircle,
   },
   {
     step: '04',
-    title: 'Aktivasi & Panduan',
-    description: 'Setelah pembayaran selesai, Admin langsung mengirimkan file injector beserta tutorial instalasi.',
+    title: 'Aktivasi & Panduan Lengkap',
+    description: 'Selesaikan transaksi dan Admin akan langsung mengirimkan paket file produk beserta panduan instalasi.',
     icon: CheckCircle2,
   },
 ];
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="steps-section reveal">
+    <section id="order-guide" className="steps-section reveal">
       <div className="section-head">
-        <span className="section-pretitle">PANDUAN PEMBELIAN</span>
-        <h2 className="section-main-title">4 Langkah Mudah Pemesanan</h2>
+        <span className="section-pretitle">ALUR TRANSAKSI</span>
+        <h2 className="section-main-title">Cara Pemesanan di ZetXiters</h2>
         <p className="section-subtext">
-          Alur pemesanan digital langsung terintegrasi dengan Customer Service resmi kami.
+          Alur mudah, transparan, dan terhubung langsung dengan Customer Service resmi kami.
         </p>
       </div>
 
@@ -45,7 +45,7 @@ export default function HowItWorks() {
             <div
               key={index}
               className="step-item-card reveal"
-              style={{ transitionDelay: `${index * 60}ms` }}
+              style={{ transitionDelay: `${index * 50}ms` }}
             >
               <div className="step-card-top-line">
                 <span className="step-badge-num">{item.step}</span>
