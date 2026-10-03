@@ -3,37 +3,37 @@ import { MessageCircle } from 'lucide-react';
 export default function Header() {
   return (
     <header className="site-header">
-      <div className="header-brand-group">
-        <div className="brand-logo-wrapper">
+      <div className="header-left">
+        <a href="#root" className="brand-logo-link">
           <img
             src={`${import.meta.env.BASE_URL}assets/zx_tr.png`}
-            alt="ZX"
+            alt="ZetXiters Logo"
             className="brand-logo-img"
           />
-        </div>
-        <div className="brand-meta">
-          <span className="brand-name">ZETXITERS</span>
-          <span className="brand-tagline">DIGITAL STORE</span>
-        </div>
+          <div className="brand-text-group">
+            <span className="brand-name">ZETXITERS</span>
+            <span className="brand-tagline">OFFICIAL STORE</span>
+          </div>
+        </a>
+        <span className="brand-version-badge">v2.0</span>
       </div>
 
-      <div className="header-status-indicator">
-        <span className="status-ping">
-          <span className="status-ping-dot"></span>
-        </span>
-        <span className="status-text">NEXUS ENGINE v2.0 ONLINE</span>
-      </div>
+      <nav className="header-nav-links">
+        <a href="#nexus-info" className="header-nav-link">Tentang Nexus</a>
+        <a href="#nexus-features" className="header-nav-link">16 Fitur</a>
+        <a href="#products-catalog" className="header-nav-link">Katalog</a>
+        <a href="#how-it-works" className="header-nav-link">Cara Order</a>
+      </nav>
 
-      <div className="header-actions">
+      <div className="header-right">
         <a
-          href="https://wa.me/6287833947151?text=Halo%20Admin%20Zet%20Xiters,%20saya%20ingin%20tanya%20seputar%20Nexus%20Injector%20v2.0"
+          href="https://wa.me/6287833947151?text=Halo%20Admin%20Zet%20Xiters,%20saya%20ingin%20konsultasi%20Nexus%20Injector%20v2.0"
           target="_blank"
           rel="noopener noreferrer"
-          className="header-contact-btn"
-          aria-label="Hubungi Admin WhatsApp"
+          className="header-cta-btn"
         >
           <MessageCircle size={15} />
-          <span>Chat Admin</span>
+          <span>Hubungi Admin</span>
         </a>
       </div>
     </header>

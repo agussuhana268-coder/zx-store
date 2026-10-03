@@ -27,6 +27,7 @@ export const NEXUS_INFO = {
   version: 'v2.0',
   price: 'Rp60.000',
   license: 'Permanen / Lifetime',
+  compatibility: 'Android 11 - 16+ (NEW VERSION)',
   tagline: 'Android System Injection & Performance Optimizer',
   description: 'Nexus Injector adalah sistem optimasi Android yang menggunakan mekanisme system injection untuk menerapkan konfigurasi secara terstruktur ke lingkungan perangkat dan game. Setiap konfigurasi diproses melalui Nexus Engine sebelum di-inject, sehingga pengaturan dapat diterapkan secara terkontrol tanpa mengubah sistem secara permanen. Dirancang untuk memberikan pengalaman gaming yang lebih stabil, responsif, dan optimal sesuai konfigurasi pengguna.',
   features: [
@@ -59,6 +60,7 @@ export const products = [
     slots: 'Tersedia • Instant Delivery',
     badge: 'FLAGSHIP',
     license: 'PERMANEN / LIFETIME',
+    compatibility: 'Android 11 - 16+ (NEW VERSION)',
     description: 'Nexus Injector adalah sistem optimasi Android yang menggunakan mekanisme system injection untuk menerapkan konfigurasi secara terstruktur ke lingkungan perangkat dan game. Setiap konfigurasi diproses melalui Nexus Engine sebelum di-inject, sehingga pengaturan dapat diterapkan secara terkontrol tanpa mengubah sistem secara permanen. Dirancang untuk memberikan pengalaman gaming yang lebih stabil, responsif, dan optimal sesuai konfigurasi pengguna.',
     features: [
       'Performance',

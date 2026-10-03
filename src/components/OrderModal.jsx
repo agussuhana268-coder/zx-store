@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Send, ShieldCheck, Cpu } from 'lucide-react';
+import { X, Send, ShieldCheck, Smartphone } from 'lucide-react';
 
 export default function OrderModal({ product, onCloseModal, isPromo }) {
   const [customerName, setCustomerName] = useState('');
@@ -50,7 +50,7 @@ export default function OrderModal({ product, onCloseModal, isPromo }) {
     } else {
       const normalized = normalizePhone(contactTrimmed);
       if (!/^\d{9,15}$/.test(normalized)) {
-        newErrors.contact = 'Nomor WhatsApp tidak valid.';
+        newErrors.contact = 'Nomor WhatsApp tidak valid (contoh: 081234567890).';
         hasError = true;
       }
     }
@@ -63,17 +63,18 @@ export default function OrderModal({ product, onCloseModal, isPromo }) {
     const normalizedPhone = normalizePhone(contactTrimmed);
 
     const messageLines = [
-      `Halo Admin Zet Xiters, saya ingin melakukan pemesanan produk:`,
+      `Halo Admin Zet Xiters, saya ingin melakukan pemesanan lisensi resmi:`,
       `📦 *${product.name}*`,
-      '',
-      'Berikut detail pemesanan saya:',
-      `👤 *Nama Lengkap:* ${nameTrimmed}`,
-      `📱 *No. WhatsApp:* ${normalizedPhone}`,
+      ...(product.compatibility ? [`📱 *Kompatibilitas:* ${product.compatibility}`] : []),
       `💰 *Harga:* ${effectivePrice} (${product.license || 'Permanen / Lifetime'})`,
       '',
-      'Mohon petunjuk untuk proses pembayaran dan panduan aktivasi sistem.',
+      'Berikut data pemesan:',
+      `👤 *Nama:* ${nameTrimmed}`,
+      `📞 *WhatsApp:* ${normalizedPhone}`,
       '',
-      'Terima kasih!'
+      'Mohon petunjuk untuk proses pembayaran dan panduan pengiriman file.',
+      '',
+      'Terima kasih.'
     ];
 
     const orderMessage = messageLines.join('\n');
@@ -84,101 +85,97 @@ export default function OrderModal({ product, onCloseModal, isPromo }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onCloseModal}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <div className="modal-title-wrap">
-            <span className="modal-kicker">KONFIRMASI ORDER</span>
-            <h2 className="modal-title">Formulir Pemesanan</h2>
+    <div className="modal-backdrop" onClick={onCloseModal}>
+      <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+        <div className="dialog-header">
+          <div>
+            <h3 className="dialog-title">Formulir Pemesanan Lisensi</h3>
+            <p className="dialog-subtitle">Pesanan Anda akan langsung diteruskan ke WhatsApp Admin resmi.</p>
           </div>
           <button
             type="button"
-            className="close-btn"
+            className="dialog-close-btn"
             onClick={onCloseModal}
-            aria-label="Tutup order modal"
+            aria-label="Tutup form pemesanan"
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
-        <div className="selected-product-summary">
-          <div className="summary-left">
-            <div className="summary-icon-box">
-              <Cpu size={20} className="summary-icon" />
-            </div>
-            <div>
-              <div className="summary-name">{product.name}</div>
-              <div className="summary-sub-badge">
+        {/* Selected Product Summary Box */}
+        <div className="order-summary-box">
+          <div className="summary-main">
+            <span className="summary-title">{product.name}</span>
+            <div className="summary-meta-line">
+              <span className="summary-license-pill">
                 <ShieldCheck size={12} />
                 <span>{product.license || 'Permanen / Lifetime'}</span>
-              </div>
+              </span>
+              {product.compatibility && (
+                <span className="summary-compat-pill">
+                  <Smartphone size={12} />
+                  <span>{product.compatibility}</span>
+                </span>
+              )}
             </div>
           </div>
-          <div className="summary-price-container">
+          <div className="summary-price-area">
             {hasActivePromo ? (
               <>
-                <span className="summary-price">{product.promoPrice}</span>
-                <span className="summary-price-original">{product.price}</span>
+                <span className="summary-price-active">{product.promoPrice}</span>
+                <span className="summary-price-prev">{product.price}</span>
               </>
             ) : (
-              <div className="summary-price">{product.price}</div>
+              <span className="summary-price-active">{product.price}</span>
             )}
           </div>
         </div>
 
-        <form onSubmit={handleOrderSubmit} noValidate>
-          <div className="form-group">
-            <label className="form-label" htmlFor="customer-name">
+        <form onSubmit={handleOrderSubmit} noValidate className="dialog-form">
+          <div className="input-group">
+            <label className="input-label" htmlFor="customer-name">
               Nama Lengkap
             </label>
             <input
               id="customer-name"
               type="text"
-              className="form-input"
-              placeholder="Contoh: Alex Pratama"
+              className="text-input"
+              placeholder="Contoh: Pratama Wijaya"
               value={customerName}
               onChange={(e) => {
                 setCustomerName(e.target.value);
                 if (errors.name) setErrors((prev) => ({ ...prev, name: '' }));
               }}
             />
-            {errors.name && (
-              <span className="error-message">
-                {errors.name}
-              </span>
-            )}
+            {errors.name && <span className="field-error">{errors.name}</span>}
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="customer-contact">
+          <div className="input-group">
+            <label className="input-label" htmlFor="customer-contact">
               Nomor WhatsApp
             </label>
             <input
               id="customer-contact"
               type="tel"
-              className="form-input"
-              placeholder="Contoh: 087812345678"
+              className="text-input"
+              placeholder="Contoh: 081234567890"
               value={customerContact}
               onChange={(e) => {
                 setCustomerContact(e.target.value);
                 if (errors.contact) setErrors((prev) => ({ ...prev, contact: '' }));
               }}
             />
-            {errors.contact && (
-              <span className="error-message">
-                {errors.contact}
-              </span>
-            )}
+            {errors.contact && <span className="field-error">{errors.contact}</span>}
           </div>
 
-          <div className="order-security-note">
-            <ShieldCheck size={14} className="sec-icon" />
-            <span>Pesanan langsung diarahkan ke Admin WhatsApp resmi tanpa perantara pihak ketiga.</span>
+          <div className="dialog-security-note">
+            <ShieldCheck size={14} className="note-icon" />
+            <span>Transaksi aman langsung dengan Admin WhatsApp resmi (087833947151).</span>
           </div>
 
-          <div className="modal-actions">
-            <button type="submit" className="btn-modal-submit">
-              <span>Lanjut ke WhatsApp</span>
+          <div className="dialog-actions">
+            <button type="submit" className="btn-dialog-submit">
+              <span>Lanjutkan ke WhatsApp</span>
               <Send size={15} />
             </button>
           </div>

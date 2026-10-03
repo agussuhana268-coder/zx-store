@@ -1,57 +1,47 @@
-import { MessageCircle, Headset, Sparkles } from 'lucide-react';
+import { MessageCircle, Headset, CheckCircle } from 'lucide-react';
 
 export default function AboutSupport() {
   return (
-    <section className="info-grid reveal">
-      <div className="info-card">
-        <div className="info-card-header">
-          <div className="info-icon-badge">
-            <Sparkles size={18} />
+    <section className="about-support-section reveal">
+      <div className="about-support-grid">
+        <div className="info-box-card">
+          <h3 className="info-box-title">Tentang ZetX Company</h3>
+          <p className="info-box-paragraph">
+            <strong>ZetX Company</strong> adalah unit pengembang tools optimasi digital dari <strong>MDZZXITERS</strong> yang
+            berdedikasi menyediakan solusi sistem gaming Android modern, aman, dan berdaya guna tinggi tanpa modifikasi sistem yang merusak.
+          </p>
+          <div className="info-trust-list">
+            <span className="trust-pill"><CheckCircle size={13} /> Pengembang Resmi MDZZXITERS</span>
+            <span className="trust-pill"><CheckCircle size={13} /> Kompatibel ANDROID 11 - 16+ (NEW VERSION)</span>
+            <span className="trust-pill"><CheckCircle size={13} /> Panduan Lengkap Termasuk</span>
           </div>
-          <h3>Tentang ZetX Company</h3>
         </div>
-        <p>
-          <strong>ZetX Company</strong> adalah penyedia solusi digital dan tools optimasi dari{' '}
-          <strong>MDZZXITERS</strong> yang berfokus pada pengembangan sistem gaming Android modern,
-          responsif, dan aman dengan pengalaman antarmuka premium.
-        </p>
-        <div className="info-pill-row">
-          <span className="info-tag">✓ Official Provider</span>
-          <span className="info-tag">✓ Verified System</span>
-          <span className="info-tag">✓ Lifetime Support</span>
-        </div>
-      </div>
 
-      <div className="info-card" style={{ transitionDelay: '80ms' }}>
-        <div className="info-card-header">
-          <div className="info-icon-badge green">
-            <Headset size={18} />
+        <div className="info-box-card" style={{ transitionDelay: '60ms' }}>
+          <h3 className="info-box-title">Pusat Bantuan & Komunitas</h3>
+          <p className="info-box-paragraph">
+            Perlu konsultasi seputar spesifikasi ponsel kamu sebelum membeli, atau butuh bantuan saat proses pemasangan? Tim kami siap melayani.
+          </p>
+          <div className="contact-actions-row">
+            <a
+              href="https://whatsapp.com/channel/0029VbCdBftLCoWwxfxAOz25"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-contact-outline"
+            >
+              <MessageCircle size={15} />
+              <span>Saluran WhatsApp</span>
+            </a>
+            <a
+              href="https://wa.me/6287833947151?text=Halo%20Admin,%20saya%20ingin%20tanya%20seputar%20Nexus%20Injector%20v2.0"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-contact-solid"
+            >
+              <Headset size={15} />
+              <span>Customer Service Langsung</span>
+            </a>
           </div>
-          <h3>Layanan Support & Konsultasi</h3>
-        </div>
-        <p>
-          Punya pertanyaan seputar kompatibilitas perangkat kamu atau butuh bantuan saat proses instalasi?
-          Tim technical support kami siap melayani setiap hari.
-        </p>
-        <div className="support-links">
-          <a
-            href="https://whatsapp.com/channel/0029VbCdBftLCoWwxfxAOz25"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="support-btn channel-btn"
-          >
-            <MessageCircle size={16} />
-            <span>Join WhatsApp Channel</span>
-          </a>
-          <a
-            href="https://wa.me/6287833947151?text=Halo%20Admin,%20saya%20ingin%20tanya%20seputar%20Nexus%20Injector%20v2.0"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="support-btn direct-btn"
-          >
-            <Headset size={16} />
-            <span>Chat CS (087833947151)</span>
-          </a>
         </div>
       </div>
     </section>

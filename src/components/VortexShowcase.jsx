@@ -6,7 +6,7 @@ export default function VortexShowcase() {
     const vortexEl = document.getElementById('zx-vortex');
     if (vortexEl) {
       const navElement = document.querySelector('.secondary-nav-wrapper');
-      const navHeight = navElement ? navElement.offsetHeight : 64;
+      const navHeight = navElement ? navElement.offsetHeight : 54;
       const elementPosition = vortexEl.getBoundingClientRect().top + window.pageYOffset;
       const offsetPosition = elementPosition - navHeight - 16;
 
@@ -18,37 +18,37 @@ export default function VortexShowcase() {
   };
 
   return (
-    <section className="vortex-showcase-section reveal">
-      <div className="vortex-showcase-card">
-        <div className="vortex-showcase-content">
-          <div className="vortex-eyebrow">
-            <Crown size={14} className="eyebrow-icon" />
+    <section className="vortex-section reveal">
+      <div className="vortex-box">
+        <div className="vortex-info-col">
+          <div className="vortex-pill-tag">
+            <Crown size={13} />
             <span>VIP EDITION TIER</span>
           </div>
 
-          <h2 className="vortex-showcase-title">ZX VORTEX</h2>
+          <h2 className="vortex-heading">ZX VORTEX Edition</h2>
 
-          <p className="vortex-showcase-description">
-            Paket tuning hardware & software kelas turnamen dengan Panel Injector Vortex terintegrasi untuk performa maksimal.
+          <p className="vortex-paragraph">
+            Paket tuning hardware & software kelas turnamen dengan Panel Injector Vortex terintegrasi,
+            thermal stability mode, dan aimlock assist untuk performa gaming tingkat tinggi.
           </p>
 
           <button
             type="button"
-            className="vortex-cta-btn"
+            className="btn-vortex-action"
             onClick={handleScrollToVortex}
           >
-            <span>Lihat Spesifikasi ZX VORTEX</span>
-            <ArrowRight size={16} />
+            <span>Lihat Paket ZX VORTEX</span>
+            <ArrowRight size={15} />
           </button>
         </div>
 
-        <div className="vortex-showcase-media" onClick={handleScrollToVortex}>
+        <div className="vortex-visual-col" onClick={handleScrollToVortex}>
           <img
             src={bannerImg || `${import.meta.env.BASE_URL}assets/banner.png`}
             alt="ZX VORTEX Showcase"
-            className="vortex-banner-img"
+            className="vortex-img-render"
           />
-          <div className="banner-gradient-overlay"></div>
         </div>
       </div>
     </section>

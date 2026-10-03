@@ -17,12 +17,9 @@ import {
   Activity, 
   ShieldCheck, 
   Compass, 
-  Check, 
   ArrowRight,
-  Terminal,
-  Cpu as EngineIcon,
-  Shield,
-  Smartphone
+  Smartphone,
+  CheckCircle2
 } from 'lucide-react';
 import { NEXUS_INFO } from '../data/products';
 
@@ -49,7 +46,6 @@ const categories = ['Semua Fitur', 'Aim & Precision', 'Display & Tuning', 'Engin
 
 export default function NexusShowcase({ onSelectNexus }) {
   const [selectedCategory, setSelectedCategory] = useState('Semua Fitur');
-  const [hoveredFeature, setHoveredFeature] = useState(null);
 
   const filteredFeatures = selectedCategory === 'Semua Fitur'
     ? NEXUS_INFO.features
@@ -57,152 +53,128 @@ export default function NexusShowcase({ onSelectNexus }) {
 
   return (
     <section id="nexus-info" className="nexus-showcase-section reveal">
-      {/* Nexus Engine Architecture Banner */}
-      <div className="nexus-hero-card">
-        <div className="nexus-glow-blob"></div>
-        <div className="nexus-card-header">
-          <div className="nexus-badge-pill">
-            <span className="pulsing-dot"></span>
-            <span>NEXUS ENGINE v2.0 • OFFICIAL ARCHITECTURE</span>
+      {/* Product Overview Card */}
+      <div className="nexus-overview-card">
+        <div className="overview-header">
+          <div className="overview-title-group">
+            <span className="overview-kicker">INFORMASI RESMI SISTEM</span>
+            <h2 className="overview-title">Nexus Injector v2.0</h2>
           </div>
-          <span className="nexus-license-tag">LIFETIME / PERMANEN</span>
+          <div className="overview-badge-group">
+            <span className="badge-os-compat">ANDROID 11 - 16+ (NEW VERSION)</span>
+            <span className="badge-license">LISENSI PERMANEN</span>
+          </div>
         </div>
 
-        <h2 className="nexus-headline">
-          Sistem Optimasi Android Generasi Baru
-        </h2>
-
-        <div className="nexus-description-box">
-          <div className="nexus-quote-bar"></div>
-          <p className="nexus-official-description">
+        {/* Official Description */}
+        <div className="nexus-quote-container">
+          <p className="nexus-quote-text">
             &ldquo;{NEXUS_INFO.description}&rdquo;
           </p>
         </div>
 
-        {/* 3 Pillars Architecture */}
-        <div className="nexus-pillars-grid">
-          <div className="nexus-pillar-card">
-            <div className="pillar-icon-box cyan">
-              <EngineIcon size={22} />
-            </div>
-            <div className="pillar-content">
-              <h4>1. Nexus Engine Processing</h4>
-              <p>Setiap konfigurasi diolah dan distrukturisasi secara real-time sebelum proses injection ke game.</p>
-            </div>
-          </div>
-
-          <div className="nexus-pillar-card">
-            <div className="pillar-icon-box purple">
-              <Smartphone size={22} />
-            </div>
-            <div className="pillar-content">
-              <h4>2. Structured System Injection</h4>
-              <p>Menerapkan setting sensitivitas, frame rate & resolusi secara presisi ke environment perangkat.</p>
+        {/* Architecture Breakdown */}
+        <div className="architecture-grid">
+          <div className="arch-card">
+            <div className="arch-num">01</div>
+            <div className="arch-body">
+              <h3 className="arch-title">Nexus Engine Processing</h3>
+              <p className="arch-desc">
+                Setiap konfigurasi diolah dan distrukturisasi secara real-time sebelum proses injection ke game.
+              </p>
             </div>
           </div>
 
-          <div className="nexus-pillar-card">
-            <div className="pillar-icon-box green">
-              <Shield size={22} />
+          <div className="arch-card">
+            <div className="arch-num">02</div>
+            <div className="arch-body">
+              <h3 className="arch-title">Structured System Injection</h3>
+              <p className="arch-desc">
+                Menerapkan parameter resolusi, DPI, dan sensitivitas secara presisi ke lingkungan game tanpa mengubah OS permanen.
+              </p>
             </div>
-            <div className="pillar-content">
-              <h4>3. Zero Permanent Modification</h4>
-              <p>Sistem tetap aman dan terkontrol tanpa mengubah file sistem OS Android secara permanen.</p>
+          </div>
+
+          <div className="arch-card">
+            <div className="arch-num">03</div>
+            <div className="arch-body">
+              <h3 className="arch-title">Zero Permanent Modification</h3>
+              <p className="arch-desc">
+                Sistem perangkat Android tetap murni dan aman (Non-Root), bebas risiko kerusakan partisi OS.
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Quick Spec Tags */}
-        <div className="nexus-meta-tags">
-          <div className="meta-tag">
-            <ShieldCheck size={14} className="meta-icon" />
-            <span>Non-Permanent Injection</span>
-          </div>
-          <div className="meta-tag">
-            <Terminal size={14} className="meta-icon" />
-            <span>Plug & Play (No Root Required)</span>
-          </div>
-          <div className="meta-tag">
-            <Zap size={14} className="meta-icon" />
-            <span>0ms Input Latency</span>
-          </div>
-          <div className="meta-tag">
-            <Check size={14} className="meta-icon" />
-            <span>Support Android 9 - 14+</span>
-          </div>
-        </div>
-
-        {/* Price & Order Action Bar */}
-        <div className="nexus-cta-strip">
-          <div className="nexus-pricing-info">
-            <span className="pricing-label">Harga Lisensi Penuh:</span>
-            <div className="pricing-val-wrap">
-              <span className="pricing-amount">{NEXUS_INFO.price}</span>
-              <span className="pricing-duration">/ Permanen (Lifetime)</span>
+        {/* System Highlights Strip */}
+        <div className="overview-footer-bar">
+          <div className="system-pill-list">
+            <div className="system-pill">
+              <CheckCircle2 size={15} className="pill-check-icon" />
+              <span>Kompatibel: <strong>ANDROID 11 - 16+ (NEW VERSION)</strong></span>
+            </div>
+            <div className="system-pill">
+              <ShieldCheck size={15} className="pill-check-icon" />
+              <span>Keamanan: <strong>100% Non-Root Safe</strong></span>
+            </div>
+            <div className="system-pill">
+              <Smartphone size={15} className="pill-check-icon" />
+              <span>Format: <strong>Lisensi Lifetime (Rp60.000)</strong></span>
             </div>
           </div>
+
           <button
             type="button"
-            className="nexus-order-btn"
+            className="btn-overview-order"
             onClick={onSelectNexus}
           >
-            <span>Dapatkan Nexus Injector v2.0</span>
-            <ArrowRight size={18} />
+            <span>Order Lisensi Nexus (Rp60.000)</span>
+            <ArrowRight size={16} />
           </button>
         </div>
       </div>
 
-      {/* Feature Showcase Grid (16 Features) */}
-      <div id="nexus-features" className="nexus-features-module">
-        <div className="module-header">
-          <div className="module-title-wrap">
-            <span className="module-kicker">FITUR LENGKAP NEXUS INJECTOR v2.0</span>
-            <h3 className="module-title">16 Modul Optimasi Terintegrasi</h3>
+      {/* 16 Features Spec Sheet */}
+      <div id="nexus-features" className="nexus-features-section">
+        <div className="features-section-header">
+          <div className="section-title-wrap">
+            <span className="section-kicker">SPESIFIKASI & KAPABILITAS</span>
+            <h3 className="section-heading">16 Modul Optimasi Terintegrasi</h3>
           </div>
-          <p className="module-desc">
-            Dilengkapi konfigurasi sensitivitas, kontrol resolusi kustom, hingga N-CORE AI dan Kernel Matrix.
+          <p className="section-subheading">
+            Daftar lengkap modul yang aktif secara terstruktur saat Nexus Injector diterapkan pada perangkat Anda.
           </p>
         </div>
 
-        {/* Category Filter Tabs */}
-        <div className="feature-category-tabs">
+        {/* Category Filter */}
+        <div className="category-filter-bar">
           {categories.map((cat) => (
             <button
               key={cat}
               type="button"
-              className={`cat-tab-btn ${selectedCategory === cat ? 'active' : ''}`}
+              className={`filter-btn ${selectedCategory === cat ? 'active' : ''}`}
               onClick={() => setSelectedCategory(cat)}
             >
               <span>{cat}</span>
-              {cat === 'Semua Fitur' && <span className="cat-count">16</span>}
+              {cat === 'Semua Fitur' && <span className="filter-count">16</span>}
             </button>
           ))}
         </div>
 
-        {/* Features Grid */}
-        <div className="features-showcase-grid">
+        {/* Feature Grid */}
+        <div className="feature-spec-grid">
           {filteredFeatures.map((feat) => {
             const Icon = iconMap[feat.name] || Zap;
-            const isHovered = hoveredFeature === feat.name;
             return (
-              <div
-                key={feat.name}
-                className={`feature-box ${isHovered ? 'hovered' : ''}`}
-                onMouseEnter={() => setHoveredFeature(feat.name)}
-                onMouseLeave={() => setHoveredFeature(null)}
-              >
-                <div className="feature-box-top">
-                  <div className="feature-icon-bubble">
+              <div key={feat.name} className="feature-spec-card">
+                <div className="feature-card-header">
+                  <div className="feature-icon-wrapper">
                     <Icon size={18} />
                   </div>
-                  <span className="feature-category-pill">{feat.tag || feat.category}</span>
+                  <span className="feature-tag">{feat.tag || feat.category}</span>
                 </div>
-                <h4 className="feature-box-title">{feat.name}</h4>
-                <p className="feature-box-desc">{feat.desc}</p>
-                <div className="feature-status-line">
-                  <span className="feature-active-dot"></span>
-                  <span className="feature-status-text">Active Module</span>
-                </div>
+                <h4 className="feature-title">{feat.name}</h4>
+                <p className="feature-desc">{feat.desc}</p>
               </div>
             );
           })}

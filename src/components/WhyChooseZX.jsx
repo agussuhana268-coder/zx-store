@@ -4,69 +4,69 @@ const benefits = [
   {
     icon: ShieldCheck,
     title: 'Non-Permanent Injection',
-    description: 'Konfigurasi diterapkan terkontrol tanpa mengubah partisi OS Android secara permanen sehingga perangkat tetap aman.',
-    tag: 'Safe Architecture',
+    description: 'Konfigurasi diterapkan secara terkontrol tanpa mengubah partisi OS Android secara permanen sehingga perangkat tetap aman.',
+    tag: 'Keamanan Sistem',
+  },
+  {
+    icon: Smartphone,
+    title: 'Support Versi Android Terbaru',
+    description: 'Kompatibel penuh untuk perangkat ANDROID 11 - 16+ (NEW VERSION) tanpa perlu akses root atau Unlock Bootloader (UBL).',
+    tag: 'Kompatibilitas',
   },
   {
     icon: Cpu,
     title: 'Nexus Engine Core',
-    description: 'Instruksi gaming diproses terlebih dahulu melalui Nexus Engine guna menyeimbangkan alokasi CPU dan GPU.',
-    tag: 'Smart Engine',
+    description: 'Semua instruksi game diproses terlebih dahulu melalui Nexus Engine guna menyeimbangkan alokasi CPU, GPU, dan frame pacing.',
+    tag: 'Arsitektur',
   },
   {
     icon: Zap,
     title: 'Zero Latency & Anti Delay',
-    description: 'Touch sampling rate ditingkatkan sehingga input layar merespons sentuhan jari secara instan tanpa jeda.',
-    tag: 'Extreme Speed',
-  },
-  {
-    icon: Smartphone,
-    title: 'Plug & Play (No Root)',
-    description: 'Bisa langsung digunakan di perangkat Android 9 hingga 14+ tanpa perlu membongkar root atau UBL.',
-    tag: 'Easy Setup',
+    description: 'Sampling rate layar dioptimasi agar respon input sentuhan jari bereaksi seketika tanpa ada jeda atau delay.',
+    tag: 'Performa Sentuhan',
   },
   {
     icon: Sparkles,
-    title: 'Lisensi Permanen / Lifetime',
-    description: 'Sekali beli Rp60.000 berlaku selamanya, termasuk update konfigurasi adaptif saat ada patch game baru.',
-    tag: 'One-Time Pay',
+    title: 'Lisensi Permanen / Sekali Bayar',
+    description: 'Hanya Rp60.000 berlaku selamanya, termasuk dukungan pembaruan konfigurasi berkala saat ada update game.',
+    tag: 'Biaya Terjangkau',
   },
   {
     icon: Headphones,
-    title: 'Support WhatsApp 24/7',
-    description: 'Didukung panduan video, langkah setting step-by-step, dan customer support siap memandu hingga aktif.',
-    tag: 'Direct Assist',
+    title: 'Layanan Bantuan Resmi 24/7',
+    description: 'Didukung panduan instalasi lengkap dan konsultasi teknis langsung dengan tim support via WhatsApp.',
+    tag: 'Support Admin',
   },
 ];
 
 export default function WhyChooseZX() {
   return (
-    <section className="why-choose-section reveal">
-      <div className="section-header-block">
-        <span className="section-eyebrow">KEUNGGULAN SISTEM</span>
-        <h2 className="section-title">Mengapa Memilih Nexus & ZetXiters?</h2>
-        <p className="section-subtitle">
-          Solusi optimasi modern yang mengedepankan keamanan sistem perangkat, stabilitas performa, dan kemudahan instalasi.
+    <section className="benefits-section reveal">
+      <div className="section-head">
+        <span className="section-pretitle">KEUNGGULAN SISTEM</span>
+        <h2 className="section-main-title">Mengapa Memilih Nexus Injector & ZetXiters?</h2>
+        <p className="section-subtext">
+          Solusi terpercaya yang mengedepankan keamanan perangkat, performa kompetitif, dan kemudahan penggunaan.
         </p>
       </div>
 
-      <div className="benefits-grid">
-        {benefits.map((benefit, index) => {
-          const Icon = benefit.icon;
+      <div className="benefits-card-grid">
+        {benefits.map((item, index) => {
+          const Icon = item.icon;
           return (
             <div
               key={index}
-              className="benefit-card reveal"
-              style={{ transitionDelay: `${index * 60}ms` }}
+              className="benefit-item-card reveal"
+              style={{ transitionDelay: `${index * 50}ms` }}
             >
-              <div className="benefit-card-top">
-                <div className="benefit-icon-wrapper">
-                  <Icon size={20} className="benefit-icon" />
+              <div className="benefit-header">
+                <div className="benefit-icon-container">
+                  <Icon size={18} />
                 </div>
-                <span className="benefit-badge">{benefit.tag}</span>
+                <span className="benefit-category-tag">{item.tag}</span>
               </div>
-              <h3 className="benefit-title">{benefit.title}</h3>
-              <p className="benefit-description">{benefit.description}</p>
+              <h3 className="benefit-card-title">{item.title}</h3>
+              <p className="benefit-card-description">{item.description}</p>
             </div>
           );
         })}

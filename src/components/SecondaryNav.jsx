@@ -4,38 +4,32 @@ import { LayoutGrid, Cpu, Info, Sliders, Crown, CheckCircle2 } from 'lucide-reac
 const navItems = [
   {
     id: 'products-catalog',
-    name: 'Katalog',
-    subtitle: 'Semua Produk',
+    name: 'Katalog Produk',
     icon: LayoutGrid,
   },
   {
     id: 'nexus-injector',
-    name: 'Nexus Injector',
-    subtitle: 'v2.0 • Rp60k',
+    name: 'Nexus Injector v2.0',
     icon: Cpu,
   },
   {
     id: 'nexus-info',
-    name: 'Tentang Nexus',
-    subtitle: 'Arsitektur Sistem',
+    name: 'Tentang Sistem',
     icon: Info,
   },
   {
     id: 'nexus-features',
     name: '16 Fitur',
-    subtitle: 'Modul Lengkap',
     icon: Sliders,
   },
   {
     id: 'zx-vortex',
     name: 'ZX VORTEX',
-    subtitle: 'VIP Edition',
     icon: Crown,
   },
   {
     id: 'how-it-works',
     name: 'Cara Order',
-    subtitle: '4 Langkah Mudah',
     icon: CheckCircle2,
   },
 ];
@@ -52,7 +46,7 @@ export default function SecondaryNav() {
     const element = document.getElementById(id);
     if (element) {
       const navElement = document.querySelector('.secondary-nav-wrapper');
-      const navHeight = navElement ? navElement.offsetHeight : 64;
+      const navHeight = navElement ? navElement.offsetHeight : 54;
       const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
       const offsetPosition = elementPosition - navHeight - 16;
 
@@ -64,7 +58,7 @@ export default function SecondaryNav() {
 
     setTimeout(() => {
       isManualScroll.current = false;
-    }, 800);
+    }, 700);
   };
 
   useEffect(() => {
@@ -72,7 +66,7 @@ export default function SecondaryNav() {
       if (isManualScroll.current) return;
 
       const navElement = document.querySelector('.secondary-nav-wrapper');
-      const navHeight = navElement ? navElement.offsetHeight : 64;
+      const navHeight = navElement ? navElement.offsetHeight : 54;
 
       const sectionIds = [
         'products-catalog',
@@ -89,7 +83,7 @@ export default function SecondaryNav() {
         const el = document.getElementById(id);
         if (el) {
           const top = el.getBoundingClientRect().top;
-          if (top <= navHeight + 140) {
+          if (top <= navHeight + 120) {
             currentActive = id;
           }
         }
@@ -120,7 +114,7 @@ export default function SecondaryNav() {
   return (
     <div className="secondary-nav-wrapper">
       <div className="secondary-nav-container">
-        <nav className="secondary-nav-bar" ref={navRef} aria-label="Secondary product navigation">
+        <nav className="secondary-nav-bar" ref={navRef} aria-label="Navigasi cepat produk">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeId === item.id;
@@ -131,14 +125,9 @@ export default function SecondaryNav() {
                 className={`secondary-nav-item ${isActive ? 'active' : ''}`}
                 onClick={() => scrollToElement(item.id)}
               >
-                <div className="nav-item-icon-wrapper">
-                  <Icon size={14} className="nav-item-icon" />
-                </div>
-                <div className="nav-item-text">
-                  <span className="nav-item-name">{item.name}</span>
-                  <span className="nav-item-subtitle">{item.subtitle}</span>
-                </div>
-                {isActive && <span className="nav-item-indicator" />}
+                <Icon size={14} className="nav-icon" />
+                <span className="nav-label">{item.name}</span>
+                {isActive && <span className="nav-active-bar" />}
               </button>
             );
           })}

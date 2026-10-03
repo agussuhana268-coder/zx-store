@@ -1,15 +1,14 @@
 import { useState } from 'react';
-import { Check, ArrowRight, ShieldCheck, ChevronDown, Sparkles, Cpu, Crown } from 'lucide-react';
-import { calculateSavings, PROMOTION_CONFIG } from '../data/products';
+import { Check, ArrowRight, ShieldCheck, ChevronDown, Smartphone } from 'lucide-react';
+import { calculateSavings } from '../data/products';
 
 export default function ProductCard({ product, index, isPromo, onSelectProduct }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const features = Array.isArray(product.features) ? product.features : [];
-  const hasFeatures = features.length > 0;
   const initialCount = 8;
   const canExpand = features.length > initialCount;
-  const delayStyle = index !== undefined ? { transitionDelay: `${index * 80}ms` } : undefined;
+  const delayStyle = index !== undefined ? { transitionDelay: `${index * 60}ms` } : undefined;
 
   const initialFeatures = features.slice(0, initialCount);
   const extraFeatures = features.slice(initialCount);
@@ -19,117 +18,104 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
   const isNexus = product.id === 'nexus-injector';
 
   return (
-    <div className={`product-card reveal ${isNexus ? 'featured-card' : ''}`} style={delayStyle}>
-      {isNexus && <div className="featured-card-border-glow"></div>}
-
-      <div className="product-card-top">
-        <div className="product-header">
-          <div className="product-identity">
-            <div className="product-title-row">
-              {isNexus ? <Cpu size={18} className="product-icon cyan" /> : <Crown size={18} className="product-icon yellow" />}
-              <h3 className="product-name">{product.name}</h3>
-            </div>
-            {product.version && <span className="product-version-pill">{product.version}</span>}
+    <div className={`pricing-card reveal ${isNexus ? 'featured-pricing-card' : ''}`} style={delayStyle}>
+      <div className="card-top-content">
+        <div className="card-header-row">
+          <div>
+            <h3 className="card-product-title">{product.name}</h3>
+            {product.compatibility ? (
+              <div className="card-compat-pill">
+                <Smartphone size={12} />
+                <span>{product.compatibility}</span>
+              </div>
+            ) : (
+              <span className="card-version-text">{product.version || 'v1.0'}</span>
+            )}
           </div>
-
-          <div className="product-badges-stack">
-            {hasActivePromo && (
-              <span className="promo-badge">
-                <Sparkles size={10} className="promo-badge-icon" />
-                {PROMOTION_CONFIG.badgeText || 'TODAY ONLY'}
-              </span>
-            )}
-            {product.badge && (
-              <span className={`popular-badge ${isNexus ? 'cyan-badge' : 'gold-badge'}`}>
-                {product.badge}
-              </span>
-            )}
-            <span className="duration-badge">
-              <ShieldCheck size={11} className="duration-badge-icon" />
-              {product.license || 'PERMANEN'}
-            </span>
+          <div className="card-badge-container">
+            {isNexus && <span className="badge-featured">REKOMENDASI</span>}
+            {product.badge && !isNexus && <span className="badge-standard">{product.badge}</span>}
           </div>
         </div>
 
         {product.description && (
-          <p className="product-brief-desc">
+          <p className="card-description-text">
             {product.description}
           </p>
         )}
 
-        {hasActivePromo ? (
-          <div className="product-pricing">
-            <div className="product-price">{product.promoPrice}</div>
-            <div className="product-price-sub">
-              <span className="product-price-original">{product.price}</span>
-              {savings && <span className="product-savings">{savings}</span>}
+        <div className="card-price-block">
+          {hasActivePromo ? (
+            <div>
+              <div className="card-price-val">{product.promoPrice}</div>
+              <div className="card-price-sub">
+                <span className="price-strikethrough">{product.price}</span>
+                {savings && <span className="price-savings-tag">{savings}</span>}
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className="product-pricing">
-            <div className="product-price">{product.price}</div>
-            <span className="product-license-note">Lisensi Permanen / Lifetime</span>
-          </div>
-        )}
+          ) : (
+            <div>
+              <div className="card-price-val">{product.price}</div>
+              <div className="card-price-note">
+                <ShieldCheck size={13} className="note-shield" />
+                <span>{product.license || 'Lisensi Permanen / Sekali Bayar'}</span>
+              </div>
+            </div>
+          )}
+        </div>
 
-        {product.slots && (
-          <div className="product-slots">
-            <span className="slot-dot"></span>
-            <span>{product.slots}</span>
-          </div>
-        )}
+        <div className="card-availability-line">
+          <span className="avail-dot"></span>
+          <span>{product.slots || 'Aktivasi Instan via WhatsApp'}</span>
+        </div>
 
-        <hr className="card-divider" />
+        <hr className="card-separator" />
 
-        {hasFeatures && (
-          <div className="features-container">
-            <span className="features-title">Fitur Termasuk:</span>
-            <ul className="product-features">
-              {initialFeatures.map((feature, idx) => (
-                <li key={idx} className="product-feature-item">
-                  <Check size={15} className="feature-check" />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
+        <div className="card-features-block">
+          <span className="features-label">Fitur yang disertakan:</span>
+          <ul className="features-list">
+            {initialFeatures.map((feat, i) => (
+              <li key={i} className="feature-line">
+                <Check size={15} className="feature-check-icon" />
+                <span>{feat}</span>
+              </li>
+            ))}
+          </ul>
 
-            {canExpand && (
-              <>
-                <div className={`extra-features-wrapper ${isExpanded ? 'is-expanded' : ''}`}>
-                  <div className="extra-features-inner">
-                    <ul className="product-features">
-                      {extraFeatures.map((feature, idx) => (
-                        <li key={idx + initialCount} className="product-feature-item">
-                          <Check size={15} className="feature-check" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+          {canExpand && (
+            <>
+              <div className={`features-accordion ${isExpanded ? 'open' : ''}`}>
+                <ul className="features-list extra-list">
+                  {extraFeatures.map((feat, i) => (
+                    <li key={i + initialCount} className="feature-line">
+                      <Check size={15} className="feature-check-icon" />
+                      <span>{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-                <button
-                  type="button"
-                  className="expand-toggle-btn"
-                  onClick={() => setIsExpanded(!isExpanded)}
-                  aria-expanded={isExpanded}
-                >
-                  <span>{isExpanded ? 'Tutup Fitur' : `+${extraFeatures.length} Fitur Lainnya`}</span>
-                  <ChevronDown size={14} className={`chevron-icon ${isExpanded ? 'rotated' : ''}`} />
-                </button>
-              </>
-            )}
-          </div>
-        )}
+              <button
+                type="button"
+                className="features-toggle-btn"
+                onClick={() => setIsExpanded(!isExpanded)}
+                aria-expanded={isExpanded}
+              >
+                <span>{isExpanded ? 'Sembunyikan' : `+${extraFeatures.length} Fitur Tambahan`}</span>
+                <ChevronDown size={14} className={`toggle-icon ${isExpanded ? 'rotate' : ''}`} />
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       <button
         type="button"
-        className={`btn-primary ${isNexus ? 'btn-nexus-glow' : ''}`}
+        className={`btn-card-order ${isNexus ? 'primary' : 'secondary'}`}
         onClick={() => onSelectProduct(product)}
       >
-        <span>Beli Sekarang</span>
-        <ArrowRight size={16} />
+        <span>Beli Lisensi Sekarang</span>
+        <ArrowRight size={15} />
       </button>
     </div>
   );

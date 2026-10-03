@@ -38,8 +38,8 @@ export default function App() {
         });
       },
       {
-        threshold: 0.1,
-        rootMargin: '0px 0px -30px 0px',
+        threshold: 0.08,
+        rootMargin: '0px 0px -20px 0px',
       }
     );
 
@@ -59,35 +59,31 @@ export default function App() {
   const nexusProduct = products.find((p) => p.id === 'nexus-injector') || products[0];
 
   return (
-    <div className="app-container">
-      {/* Background Ambient Glows */}
-      <div className="bg-glow-top"></div>
-      <div className="bg-glow-middle"></div>
-
-      <div className="container">
+    <div className="app-wrapper">
+      <div className="site-width-container">
         <Header />
       </div>
 
       <SecondaryNav />
 
-      <div className="container">
-        <main>
+      <div className="site-width-container">
+        <main className="main-content-flow">
           <Hero onSelectNexus={() => openOrderModal(nexusProduct)} />
 
           <NexusShowcase onSelectNexus={() => openOrderModal(nexusProduct)} />
 
-          <section id="products-catalog" className="products-section">
-            <div className="section-header-block">
-              <span className="section-eyebrow">KATALOG PILIHAN</span>
-              <h2 className="section-title reveal">Katalog Produk Resmi</h2>
-              <p className="section-subtitle reveal">
-                Pilih paket lisensi permanen yang sesuai dengan kebutuhan gaming kamu.
+          <section id="products-catalog" className="catalog-section reveal">
+            <div className="section-head">
+              <span className="section-pretitle">PILIHAN LISENSI RESMI</span>
+              <h2 className="section-main-title">Katalog Produk & Paket</h2>
+              <p className="section-subtext">
+                Pilih paket lisensi permanen sesuai dengan perangkat dan konfigurasi yang kamu inginkan.
               </p>
             </div>
 
-            <div className="products-grid">
+            <div className="pricing-cards-grid">
               {products.map((product, index) => (
-                <div key={product.id} id={product.id} className="product-card-wrapper">
+                <div key={product.id} id={product.id} className="pricing-card-col">
                   <ProductCard
                     product={product}
                     index={index}
