@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import SecondaryNav from './components/SecondaryNav';
 import Hero from './components/Hero';
+import NexusShowcase from './components/NexusShowcase';
 import ProductCard from './components/ProductCard';
 import OrderModal from './components/OrderModal';
 import VortexShowcase from './components/VortexShowcase';
@@ -37,8 +38,8 @@ export default function App() {
         });
       },
       {
-        threshold: 0.15,
-        rootMargin: '0px 0px -40px 0px',
+        threshold: 0.1,
+        rootMargin: '0px 0px -30px 0px',
       }
     );
 
@@ -55,8 +56,14 @@ export default function App() {
     setSelectedProduct(null);
   };
 
+  const nexusProduct = products.find((p) => p.id === 'nexus-injector') || products[0];
+
   return (
     <div className="app-container">
+      {/* Background Ambient Glows */}
+      <div className="bg-glow-top"></div>
+      <div className="bg-glow-middle"></div>
+
       <div className="container">
         <Header />
       </div>
@@ -65,13 +72,18 @@ export default function App() {
 
       <div className="container">
         <main>
-          <Hero />
+          <Hero onSelectNexus={() => openOrderModal(nexusProduct)} />
+
+          <NexusShowcase onSelectNexus={() => openOrderModal(nexusProduct)} />
 
           <section id="products-catalog" className="products-section">
-            <h2 className="section-title reveal">Katalog Produk</h2>
-            <p className="section-subtitle reveal">
-              Pilih produk yang sesuai dengan kebutuhan kamu.
-            </p>
+            <div className="section-header-block">
+              <span className="section-eyebrow">KATALOG PILIHAN</span>
+              <h2 className="section-title reveal">Katalog Produk Resmi</h2>
+              <p className="section-subtitle reveal">
+                Pilih paket lisensi permanen yang sesuai dengan kebutuhan gaming kamu.
+              </p>
+            </div>
 
             <div className="products-grid">
               {products.map((product, index) => (

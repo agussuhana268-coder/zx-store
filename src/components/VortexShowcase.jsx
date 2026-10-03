@@ -1,4 +1,4 @@
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Crown } from 'lucide-react';
 import bannerImg from '../assets/banner.png';
 
 export default function VortexShowcase() {
@@ -22,14 +22,14 @@ export default function VortexShowcase() {
       <div className="vortex-showcase-card">
         <div className="vortex-showcase-content">
           <div className="vortex-eyebrow">
-            <Sparkles size={13} className="eyebrow-icon" />
-            <span>INTRODUCING</span>
+            <Crown size={14} className="eyebrow-icon" />
+            <span>VIP EDITION TIER</span>
           </div>
 
           <h2 className="vortex-showcase-title">ZX VORTEX</h2>
 
           <p className="vortex-showcase-description">
-            Produk terbaru dari ZetXiters Company.
+            Paket tuning hardware & software kelas turnamen dengan Panel Injector Vortex terintegrasi untuk performa maksimal.
           </p>
 
           <button
@@ -37,7 +37,7 @@ export default function VortexShowcase() {
             className="vortex-cta-btn"
             onClick={handleScrollToVortex}
           >
-            <span>Pelajari ZX VORTEX</span>
+            <span>Lihat Spesifikasi ZX VORTEX</span>
             <ArrowRight size={16} />
           </button>
         </div>
@@ -48,6 +48,7 @@ export default function VortexShowcase() {
             alt="ZX VORTEX Showcase"
             className="vortex-banner-img"
           />
+          <div className="banner-gradient-overlay"></div>
         </div>
       </div>
     </section>

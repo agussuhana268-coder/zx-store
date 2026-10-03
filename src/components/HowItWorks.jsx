@@ -4,36 +4,39 @@ const steps = [
   {
     step: '01',
     title: 'Pilih Produk',
-    description: 'Pilih produk yang sesuai dengan kebutuhan kamu.',
+    description: 'Pilih Nexus Injector v2.0 (Rp60.000) atau produk yang sesuai dengan perangkat dan kebutuhan kamu.',
     icon: MousePointerClick,
   },
   {
     step: '02',
-    title: 'Isi Data',
-    description: 'Masukkan nama dan nomor WhatsApp.',
+    title: 'Lengkapi Data',
+    description: 'Ketikkan nama lengkap dan nomor WhatsApp aktif pada formulir pemesanan cepat.',
     icon: FileText,
   },
   {
     step: '03',
-    title: 'Hubungi Admin',
-    description: 'Detail pesanan otomatis dikirim ke WhatsApp admin.',
+    title: 'Teruskan ke WhatsApp',
+    description: 'Pesan pemesanan otomatis terformat dan langsung dikirim ke WhatsApp resmi admin ZetXiters.',
     icon: MessageCircle,
   },
   {
     step: '04',
-    title: 'Aktivasi',
-    description: 'Ikuti proses pembayaran dan aktivasi yang diberikan admin.',
+    title: 'Aktivasi Instan',
+    description: 'Lakukan pembayaran dan admin akan langsung mengirimkan file injector beserta panduan instalasi lengkap.',
     icon: CheckCircle2,
   },
 ];
 
 export default function HowItWorks() {
   return (
-    <section className="how-it-works-section">
-      <h2 className="section-title reveal">Cara Order</h2>
-      <p className="section-subtitle reveal">
-        Langkah mudah dan praktis untuk pemesanan produk digital.
-      </p>
+    <section id="how-it-works" className="how-it-works-section reveal">
+      <div className="section-header-block">
+        <span className="section-eyebrow">PANDUAN PEMBELIAN</span>
+        <h2 className="section-title">Cara Order Cepat & Praktis</h2>
+        <p className="section-subtitle">
+          Proses pemesanan digital otomatis terintegrasi langsung dengan Customer Service via WhatsApp.
+        </p>
+      </div>
 
       <div className="steps-grid">
         {steps.map((item, index) => {
@@ -47,7 +50,7 @@ export default function HowItWorks() {
               <div className="step-card-header">
                 <span className="step-number">{item.step}</span>
                 <div className="step-icon-wrapper">
-                  <Icon size={16} className="step-icon" />
+                  <Icon size={18} className="step-icon" />
                 </div>
               </div>
               <h3 className="step-title">{item.title}</h3>

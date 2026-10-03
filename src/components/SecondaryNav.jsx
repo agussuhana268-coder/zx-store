@@ -1,36 +1,42 @@
 import { useState, useEffect, useRef } from 'react';
-import { LayoutGrid, Cpu, Zap, Crown, Target } from 'lucide-react';
+import { LayoutGrid, Cpu, Info, Sliders, Crown, CheckCircle2 } from 'lucide-react';
 
 const navItems = [
   {
     id: 'products-catalog',
-    name: 'All Products',
-    subtitle: 'Overview',
+    name: 'Katalog',
+    subtitle: 'Semua Produk',
     icon: LayoutGrid,
   },
   {
-    id: 'zx-core',
-    name: 'ZX CORE',
-    subtitle: 'Basic Access',
+    id: 'nexus-injector',
+    name: 'Nexus Injector',
+    subtitle: 'v2.0 • Rp60k',
     icon: Cpu,
   },
   {
-    id: 'zx-apex',
-    name: 'ZX APEX',
-    subtitle: 'Advanced Access',
-    icon: Zap,
+    id: 'nexus-info',
+    name: 'Tentang Nexus',
+    subtitle: 'Arsitektur Sistem',
+    icon: Info,
   },
   {
-    id: 'zx-exclusive',
-    name: 'ZX EXCLUSIVE',
-    subtitle: 'Premium Access',
-    icon: Crown,
+    id: 'nexus-features',
+    name: '16 Fitur',
+    subtitle: 'Modul Lengkap',
+    icon: Sliders,
   },
   {
     id: 'zx-vortex',
     name: 'ZX VORTEX',
-    subtitle: 'Ultimate Access',
-    icon: Target,
+    subtitle: 'VIP Edition',
+    icon: Crown,
+  },
+  {
+    id: 'how-it-works',
+    name: 'Cara Order',
+    subtitle: '4 Langkah Mudah',
+    icon: CheckCircle2,
   },
 ];
 
@@ -68,23 +74,22 @@ export default function SecondaryNav() {
       const navElement = document.querySelector('.secondary-nav-wrapper');
       const navHeight = navElement ? navElement.offsetHeight : 64;
 
-      const catalogEl = document.getElementById('products-catalog');
-      if (!catalogEl) return;
+      const sectionIds = [
+        'products-catalog',
+        'nexus-injector',
+        'nexus-info',
+        'nexus-features',
+        'zx-vortex',
+        'how-it-works',
+      ];
 
-      const catalogTop = catalogEl.getBoundingClientRect().top;
-      if (catalogTop > window.innerHeight * 0.5) {
-        setActiveId('products-catalog');
-        return;
-      }
-
-      const productIds = ['zx-core', 'zx-apex', 'zx-exclusive', 'zx-vortex'];
       let currentActive = 'products-catalog';
 
-      for (const id of productIds) {
+      for (const id of sectionIds) {
         const el = document.getElementById(id);
         if (el) {
           const top = el.getBoundingClientRect().top;
-          if (top <= navHeight + 120) {
+          if (top <= navHeight + 140) {
             currentActive = id;
           }
         }
@@ -127,7 +132,7 @@ export default function SecondaryNav() {
                 onClick={() => scrollToElement(item.id)}
               >
                 <div className="nav-item-icon-wrapper">
-                  <Icon size={15} className="nav-item-icon" />
+                  <Icon size={14} className="nav-item-icon" />
                 </div>
                 <div className="nav-item-text">
                   <span className="nav-item-name">{item.name}</span>

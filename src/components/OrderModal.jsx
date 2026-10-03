@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Send } from 'lucide-react';
+import { X, Send, ShieldCheck, Cpu } from 'lucide-react';
 
 export default function OrderModal({ product, onCloseModal, isPromo }) {
   const [customerName, setCustomerName] = useState('');
@@ -63,18 +63,17 @@ export default function OrderModal({ product, onCloseModal, isPromo }) {
     const normalizedPhone = normalizePhone(contactTrimmed);
 
     const messageLines = [
-      `Halo Admin Zet Xiters, saya ingin melakukan pemesanan produk ${product.name}.`,
+      `Halo Admin Zet Xiters, saya ingin melakukan pemesanan produk:`,
+      `📦 *${product.name}*`,
       '',
       'Berikut detail pemesanan saya:',
+      `👤 *Nama Lengkap:* ${nameTrimmed}`,
+      `📱 *No. WhatsApp:* ${normalizedPhone}`,
+      `💰 *Harga:* ${effectivePrice} (${product.license || 'Permanen / Lifetime'})`,
       '',
-      `Nama Lengkap: ${nameTrimmed}`,
-      `No. WhatsApp: ${normalizedPhone}`,
-      `Produk: ${product.name}`,
-      `Harga: ${effectivePrice}`,
+      'Mohon petunjuk untuk proses pembayaran dan panduan aktivasi sistem.',
       '',
-      'Mohon informasi mengenai proses pembayaran dan aktivasi produk.',
-      '',
-      'Terima kasih.'
+      'Terima kasih!'
     ];
 
     const orderMessage = messageLines.join('\n');
@@ -88,7 +87,10 @@ export default function OrderModal({ product, onCloseModal, isPromo }) {
     <div className="modal-overlay" onClick={onCloseModal}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2 className="modal-title">Order Produk</h2>
+          <div className="modal-title-wrap">
+            <span className="modal-kicker">KONFIRMASI ORDER</span>
+            <h2 className="modal-title">Formulir Pemesanan</h2>
+          </div>
           <button
             type="button"
             className="close-btn"
@@ -100,11 +102,17 @@ export default function OrderModal({ product, onCloseModal, isPromo }) {
         </div>
 
         <div className="selected-product-summary">
-          <div>
-            <div className="summary-name">{product.name}</div>
-            {product.slots && (
-              <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{product.slots}</div>
-            )}
+          <div className="summary-left">
+            <div className="summary-icon-box">
+              <Cpu size={20} className="summary-icon" />
+            </div>
+            <div>
+              <div className="summary-name">{product.name}</div>
+              <div className="summary-sub-badge">
+                <ShieldCheck size={12} />
+                <span>{product.license || 'Permanen / Lifetime'}</span>
+              </div>
+            </div>
           </div>
           <div className="summary-price-container">
             {hasActivePromo ? (
@@ -127,7 +135,7 @@ export default function OrderModal({ product, onCloseModal, isPromo }) {
               id="customer-name"
               type="text"
               className="form-input"
-              placeholder="Masukkan nama lengkap"
+              placeholder="Contoh: Alex Pratama"
               value={customerName}
               onChange={(e) => {
                 setCustomerName(e.target.value);
@@ -135,7 +143,7 @@ export default function OrderModal({ product, onCloseModal, isPromo }) {
               }}
             />
             {errors.name && (
-              <span className="error-message" style={{ color: '#ef4444', fontSize: '12px', marginTop: '4px', display: 'block' }}>
+              <span className="error-message">
                 {errors.name}
               </span>
             )}
@@ -157,15 +165,20 @@ export default function OrderModal({ product, onCloseModal, isPromo }) {
               }}
             />
             {errors.contact && (
-              <span className="error-message" style={{ color: '#ef4444', fontSize: '12px', marginTop: '4px', display: 'block' }}>
+              <span className="error-message">
                 {errors.contact}
               </span>
             )}
           </div>
 
+          <div className="order-security-note">
+            <ShieldCheck size={14} className="sec-icon" />
+            <span>Pesanan langsung diarahkan ke Admin WhatsApp resmi tanpa perantara pihak ketiga.</span>
+          </div>
+
           <div className="modal-actions">
-            <button type="submit" className="btn-primary">
-              <span>Order via WhatsApp</span>
+            <button type="submit" className="btn-modal-submit">
+              <span>Lanjut ke WhatsApp</span>
               <Send size={15} />
             </button>
           </div>
