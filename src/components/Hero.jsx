@@ -19,8 +19,8 @@ export default function Hero() {
       </div>
 
       <h1 className="company-hero-heading">
-        Penyedia Solusi & Tools Optimasi <br className="hero-break" />
-        <span className="heading-accent">Gaming Android Terpercaya</span>
+        Mdzz Official Store <br className="hero-break" />
+        <span className="heading-accent">Tools Gaming Android Terpercaya</span>
       </h1>
 
       <p className="company-hero-description">
