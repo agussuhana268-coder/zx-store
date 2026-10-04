@@ -10,7 +10,7 @@ const companyBenefits = [
   {
     icon: Smartphone,
     title: 'Kompatibilitas Versi Android',
-    description: 'Teruji dan kompatibel penuh pada perangkat ANDROID 11 - 16+ (NEW VERSION) lintas berbagai brand smartphone dan chipset.',
+    description: 'Teruji dan kompatibel penuh pada perangkat ANDROID 11 - 17+ (NEW VERSION) lintas berbagai brand smartphone dan chipset.',
     tag: 'Kompatibilitas',
   },
   {
