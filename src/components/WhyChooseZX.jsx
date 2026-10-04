@@ -1,4 +1,4 @@
-import { ShieldCheck, Smartphone, Zap, CheckCircle, Sparkles, Headphones } from 'lucide-react';
+import { ShieldCheck, Smartphone, Zap, CheckCircle, Key, Headphones } from 'lucide-react';
 
 const companyBenefits = [
   {
@@ -26,7 +26,7 @@ const companyBenefits = [
     tag: 'Layanan Cepat',
   },
   {
-    icon: Sparkles,
+    icon: Key,
     title: 'Lisensi Permanen',
     description: 'Sistem pembelian satu kali tanpa biaya langganan bulanan tersembunyi, berlaku seumur hidup (lifetime).',
     tag: 'Sekali Bayar',
