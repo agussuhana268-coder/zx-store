@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mdzzofficialstore.biz.id/sitemap.xml
