@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mdzz-store-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-05",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "mdzz-store-db",
+      "database_id": "mdzz-store-db"
+    }
+  ]
+}
