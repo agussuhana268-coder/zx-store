@@ -20,11 +20,11 @@ export default function Hero() {
 
       <h1 className="company-hero-heading">
         Mdzz Official Store <br className="hero-break" />
-        <span className="heading-accent">Tools Gaming Android Terpercaya</span>
+        <span className="heading-accent">Tools Gaming Terpercaya & Berkualitas</span>
       </h1>
 
       <p className="company-hero-description">
-        <strong>ZetXiters Company</strong> mengembangkan produk konfigurasi sistem terstruktur yang dirancang
+        <strong>ZetXiters Company</strong> mengembangkan solusi konfigurasi sistem terstruktur untuk perangkat Android dan iOS yang dirancang
         untuk menghadirkan akurasi tinggi, respon sentuhan instan, dan kestabilan performa gaming tanpa
         mengubah sistem perangkat secara permanen.
       </p>
@@ -74,8 +74,8 @@ export default function Hero() {
             <Smartphone size={18} />
           </div>
           <div className="highlight-content">
-            <span className="highlight-title">Dukungan Versi OS</span>
-            <span className="highlight-desc">ANDROID 11 - 17+ (NEW VERSION)</span>
+            <span className="highlight-title">Dukungan Multi-Platform</span>
+            <span className="highlight-desc">Android 11 - 17+ & iOS 15 - 27</span>
           </div>
         </div>
 

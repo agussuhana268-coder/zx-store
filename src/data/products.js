@@ -25,10 +25,16 @@ export const calculateSavings = (price, promoPrice) => {
 export const NEXUS_INFO = {
   name: 'Nexus Injector v2.0',
   version: 'v2.0',
+  platform: 'Android',
   price: 'Rp60.000',
   license: 'Permanen / Lifetime',
   compatibility: 'Android 11 - 17+ (NEW VERSION)',
   tagline: 'Android System Injection & Performance Optimizer',
+  durations: [
+    { id: '10-days', label: '10 Hari', price: 'Rp20.000' },
+    { id: '18-days', label: '18 Hari', price: 'Rp30.000' },
+    { id: 'permanent', label: 'Permanen', price: 'Rp60.000', isDefault: true },
+  ],
   description: 'Nexus Injector adalah sistem optimasi Android yang menggunakan mekanisme system injection untuk menerapkan konfigurasi secara terstruktur ke lingkungan perangkat dan game. Setiap konfigurasi diproses melalui Nexus Engine sebelum di-inject, sehingga pengaturan dapat diterapkan secara terkontrol tanpa mengubah sistem secara permanen. Dirancang untuk memberikan pengalaman gaming yang lebih stabil, responsif, dan optimal sesuai konfigurasi pengguna.',
   features: [
     { name: 'Performance', category: 'Engine & System', tag: 'Core', desc: 'Optimasi performa CPU & alokasi resource game tanpa bottleneck.' },
@@ -55,12 +61,18 @@ export const products = [
     id: 'nexus-injector',
     name: 'NEXUS INJECTOR',
     version: 'v2.0',
+    platform: 'Android',
     price: 'Rp60.000',
     promoPrice: null,
     slots: 'Tersedia • Instant Delivery',
     badge: 'FLAGSHIP',
     license: 'PERMANEN / LIFETIME',
     compatibility: 'Android 11 - 17+ (NEW VERSION)',
+    durations: [
+      { id: '10-days', label: '10 Hari', price: 'Rp20.000' },
+      { id: '18-days', label: '18 Hari', price: 'Rp30.000' },
+      { id: 'permanent', label: 'Permanen', price: 'Rp60.000', isDefault: true },
+    ],
     description: 'Nexus Injector adalah sistem optimasi Android yang menggunakan mekanisme system injection untuk menerapkan konfigurasi secara terstruktur ke lingkungan perangkat dan game. Setiap konfigurasi diproses melalui Nexus Engine sebelum di-inject, sehingga pengaturan dapat diterapkan secara terkontrol tanpa mengubah sistem secara permanen. Dirancang untuk memberikan pengalaman gaming yang lebih stabil, responsif, dan optimal sesuai konfigurasi pengguna.',
     features: [
       'Performance',
@@ -85,12 +97,18 @@ export const products = [
     id: 'zx-vortex',
     name: 'ZX VORTEX',
     version: 'v3.5',
+    platform: 'Android',
     price: 'Rp149.000',
-    promoPrice: 'Rp139.000',
+    promoPrice: null,
     slots: 'Tersedia • Instant Delivery',
     badge: 'VIP EDITION',
     license: 'PERMANEN / LIFETIME',
     compatibility: 'ANDROID 11 - 17+ (NEW VERSION)',
+    durations: [
+      { id: '10-days', label: '10 Hari', price: 'Rp59.000' },
+      { id: '18-days', label: '18 Hari', price: 'Rp79.000' },
+      { id: 'permanent', label: 'Permanen', price: 'Rp149.000', isDefault: true },
+    ],
     description: 'VORTEX adalah tools kelas atas dengan Vortex Injector Panel yang dirancang untuk menerapkan konfigurasi gaming secara terstruktur dan terkontrol. Dilengkapi Thermal Stability untuk membantu menjaga kestabilan performa perangkat serta Aimlock Assist terintegrasi untuk mendukung kontrol permainan. Setiap konfigurasi diproses melalui Vortex Engine untuk menghadirkan pengalaman gaming yang lebih stabil, responsif, dan konsisten.',
     features: [
       'Panel Injector Vortex Setting',
@@ -117,6 +135,37 @@ export const products = [
       'Crosshair Aim Helper',
       'FPS Monitoring',
       'Performa Monitoring',
+    ]
+  },
+  {
+    id: 'insanity-max',
+    name: 'INSANITY MAX',
+    version: 'v1.0',
+    platform: 'iOS / iPhone',
+    price: 'Rp250.000',
+    promoPrice: null,
+    slots: 'Tersedia • Instant Delivery',
+    badge: 'iOS EXCLUSIVE',
+    license: 'PERMANEN / LIFETIME',
+    compatibility: 'iOS 15 - iOS 27',
+    durations: [
+      { id: '5-days', label: '5 Hari', price: 'Rp40.000' },
+      { id: '15-days', label: '15 Hari', price: 'Rp70.000' },
+      { id: '20-days', label: '20 Hari', price: 'Rp150.000' },
+      { id: 'permanent', label: 'Permanen', price: 'Rp250.000', isDefault: true },
+    ],
+    description: 'Insanity Max adalah tools app khusus iOS/iPhone yang menggunakan sistem injector dan mekanisme konfigurasi terstruktur untuk mengoptimalkan berbagai parameter pada lingkungan perangkat dan game. Setiap konfigurasi diproses melalui sistem internal sebelum diterapkan, sehingga pengaturan dapat disesuaikan secara fleksibel dengan karakteristik perangkat dan kebutuhan pengguna. Dirancang dengan pendekatan optimasi yang terintegrasi untuk menghasilkan pengalaman gaming yang lebih stabil, responsif, smooth, dan konsisten tanpa mengubah sistem iOS secara permanen.',
+    features: [
+      'Dragshot Config',
+      'Assist Head',
+      'Tweak Config',
+      'FPS Booster',
+      'Smooth Aim',
+      'AImHead Settings',
+      'Optimize Recoil',
+      'Headlock 45%',
+      'Bypass Protection',
+      'Cache Cleaner',
     ]
   }
 ];

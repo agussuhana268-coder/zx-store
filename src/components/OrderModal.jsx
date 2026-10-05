@@ -1,14 +1,33 @@
 import { useState, useEffect } from 'react';
-import { X, Send, ShieldCheck, Smartphone, QrCode, MessageCircle, ArrowRight } from 'lucide-react';
+import { X, Send, ShieldCheck, QrCode, MessageCircle, ArrowRight } from 'lucide-react';
 import { createOrder } from '../utils/api';
+import PlatformIcon from './PlatformIcon';
 
-export default function OrderModal({ product, onCloseModal, isPromo, onProceedToQris }) {
+export default function OrderModal({ product, onCloseModal, isPromo: _isPromo, onProceedToQris }) {
   const [customerName, setCustomerName] = useState('');
   const [customerContact, setCustomerContact] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('qris'); // 'qris' | 'whatsapp'
   const [errors, setErrors] = useState({ name: '', contact: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+
+  const defaultDuration =
+    product?.selectedDuration ||
+    product?.durations?.find((d) => d.isDefault) ||
+    product?.durations?.[0] ||
+    null;
+
+  const [activeDuration, setActiveDuration] = useState(defaultDuration);
+
+  // Sync activeDuration when product prop changes
+  useEffect(() => {
+    setActiveDuration(
+      product?.selectedDuration ||
+      product?.durations?.find((d) => d.isDefault) ||
+      product?.durations?.[0] ||
+      null
+    );
+  }, [product]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -22,8 +41,15 @@ export default function OrderModal({ product, onCloseModal, isPromo, onProceedTo
 
   if (!product) return null;
 
-  const hasActivePromo = Boolean(isPromo && product.promoPrice);
-  const effectivePrice = hasActivePromo ? product.promoPrice : product.price;
+  const activePrice = activeDuration ? activeDuration.price : product.price;
+  const activeLicense = activeDuration
+    ? (activeDuration.label.toLowerCase().includes('permanen')
+        ? (product.license || 'Permanen / Lifetime')
+        : `Durasi ${activeDuration.label}`)
+    : (product.license || 'Permanen / Lifetime');
+
+  const durationLabel = activeDuration?.label || 'Permanen';
+  const isIos = product.platform?.toLowerCase().includes('ios');
 
   const normalizePhone = (phone) => {
     let cleaned = phone.replace(/[\s\-()]/g, '');
@@ -65,6 +91,7 @@ export default function OrderModal({ product, onCloseModal, isPromo, onProceedTo
     }
 
     const normalizedPhone = normalizePhone(contactTrimmed);
+    const orderProductName = `${product.name} — ${durationLabel}`;
 
     // If QRIS payment method is selected
     if (paymentMethod === 'qris' && onProceedToQris) {
@@ -76,11 +103,14 @@ export default function OrderModal({ product, onCloseModal, isPromo, onProceedTo
       createOrder({
         product: {
           id: product.id,
-          name: product.name,
-          license: product.license || 'Permanen / Lifetime',
+          name: orderProductName,
+          baseName: product.name,
+          duration: durationLabel,
+          license: activeLicense,
+          platform: product.platform || '',
           compatibility: product.compatibility || '',
         },
-        total: effectivePrice,
+        total: activePrice,
         customerName: nameTrimmed,
         customerContact: normalizedPhone,
         paymentMethod: 'QRIS_DANA',
@@ -100,12 +130,14 @@ export default function OrderModal({ product, onCloseModal, isPromo, onProceedTo
       return;
     }
 
-    // Existing WhatsApp Order flow (100% preserved)
+    // Existing WhatsApp Order flow
     const messageLines = [
       `Halo Admin Zet Xiters, saya ingin melakukan pemesanan lisensi resmi:`,
-      `📦 *${product.name}*`,
+      `📦 *${product.name} — ${durationLabel} — ${activePrice}*`,
+      `⏱️ *Durasi:* ${durationLabel}`,
+      ...(product.platform ? [`💻 *Platform:* ${product.platform}`] : []),
       ...(product.compatibility ? [`📱 *Kompatibilitas:* ${product.compatibility}`] : []),
-      `💰 *Harga:* ${effectivePrice} (${product.license || 'Permanen / Lifetime'})`,
+      `💰 *Total Pembayaran:* ${activePrice} (${activeLicense})`,
       '',
       'Berikut data pemesan:',
       `👤 *Nama:* ${nameTrimmed}`,
@@ -146,31 +178,54 @@ export default function OrderModal({ product, onCloseModal, isPromo, onProceedTo
         {/* Selected Product Summary Box */}
         <div className="order-summary-box">
           <div className="summary-main">
-            <span className="summary-title">{product.name}</span>
+            <span className="summary-title">
+              {product.name} — {durationLabel}
+            </span>
             <div className="summary-meta-line">
+              {product.platform && (
+                <span className={`summary-platform-pill ${isIos ? 'ios' : 'android'}`}>
+                  <PlatformIcon platform={product.platform} size={12} className="platform-icon" />
+                  <span>{product.platform}</span>
+                </span>
+              )}
               <span className="summary-license-pill">
                 <ShieldCheck size={12} />
-                <span>{product.license || 'Permanen / Lifetime'}</span>
+                <span>{activeLicense}</span>
               </span>
               {product.compatibility && (
                 <span className="summary-compat-pill">
-                  <Smartphone size={12} />
                   <span>{product.compatibility}</span>
                 </span>
               )}
             </div>
           </div>
           <div className="summary-price-area">
-            {hasActivePromo ? (
-              <>
-                <span className="summary-price-active">{product.promoPrice}</span>
-                <span className="summary-price-prev">{product.price}</span>
-              </>
-            ) : (
-              <span className="summary-price-active">{product.price}</span>
-            )}
+            <span className="summary-price-active">{activePrice}</span>
           </div>
         </div>
+
+        {/* Duration selector inside modal */}
+        {product.durations && product.durations.length > 1 && (
+          <div className="dialog-duration-group">
+            <label className="input-label">Pilih Durasi Lisensi</label>
+            <div className="modal-duration-grid">
+              {product.durations.map((dur) => {
+                const isSelected = activeDuration?.id === dur.id;
+                return (
+                  <button
+                    key={dur.id}
+                    type="button"
+                    className={`modal-duration-pill ${isSelected ? 'active' : ''}`}
+                    onClick={() => setActiveDuration(dur)}
+                  >
+                    <span className="modal-dur-label">{dur.label}</span>
+                    <span className="modal-dur-price">{dur.price}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <form onSubmit={handleOrderSubmit} noValidate className="dialog-form">
           {/* Payment Method Selector */}

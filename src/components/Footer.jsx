@@ -13,7 +13,7 @@ export default function Footer() {
               <span className="footer-brand-heading">ZETXITERS COMPANY</span>
             </div>
             <p className="footer-brand-subtitle">
-              Divisi produk digital resmi dari MDZZXITERS yang berdedikasi menyediakan solusi optimasi gaming Android yang aman, stabil, dan terpercaya.
+              Divisi produk digital resmi dari MDZZXITERS yang berdedikasi menyediakan solusi optimasi gaming Android & iOS yang aman, stabil, dan terpercaya.
             </p>
           </div>
 

@@ -151,7 +151,7 @@ export default function App() {
               <span className="section-pretitle">KATALOG RESMI ZETXITERS</span>
               <h2 className="section-main-title">Pilihan Produk & Lisensi Sistem</h2>
               <p className="section-subtext">
-                ZetXiters menghadirkan dua varian konfigurasi sistem Android terstruktur untuk kestabilan dan performa kompetitif.
+                ZetXiters menghadirkan varian konfigurasi sistem terstruktur untuk perangkat Android dan iOS demi kestabilan dan performa kompetitif.
               </p>
             </div>
 
@@ -207,7 +207,22 @@ export default function App() {
             } catch {}
           }}
           onBack={() => {
-            setSelectedProduct(qrisOrder.product);
+            const rawId = qrisOrder.product?.id;
+            const catalogProduct = products.find((p) => p.id === rawId) || qrisOrder.product;
+            let matchedDuration = null;
+            if (catalogProduct?.durations) {
+              matchedDuration =
+                catalogProduct.durations.find(
+                  (d) =>
+                    d.label === qrisOrder.product?.duration ||
+                    qrisOrder.product?.name?.includes(d.label) ||
+                    d.price === qrisOrder.total
+                ) || null;
+            }
+            setSelectedProduct({
+              ...catalogProduct,
+              selectedDuration: matchedDuration || catalogProduct?.durations?.find((d) => d.isDefault) || null,
+            });
             setQrisOrder(null);
             try {
               localStorage.removeItem('zx_active_order_id');

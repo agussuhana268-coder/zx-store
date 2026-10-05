@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "test": "node test/api.test.js && node test/sound.test.js",
+    "test": "node test/api.test.js && node test/sound.test.js && node test/products.test.js",
     "preview": "vite preview"
   },
   "dependencies": {

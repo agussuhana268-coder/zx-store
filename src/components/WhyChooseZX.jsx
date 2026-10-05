@@ -4,13 +4,13 @@ const companyBenefits = [
   {
     icon: ShieldCheck,
     title: 'Keamanan Sistem Terjamin',
-    description: 'Seluruh konfigurasi ZetXiters dirancang berjalan tanpa memerlukan akses root dan tanpa mengubah partisi OS Android secara permanen.',
+    description: 'Seluruh konfigurasi ZetXiters dirancang berjalan tanpa memerlukan akses root/jailbreak dan tanpa mengubah partisi sistem perangkat secara permanen.',
     tag: 'Keamanan',
   },
   {
     icon: Smartphone,
-    title: 'Kompatibilitas Versi Android',
-    description: 'Teruji dan kompatibel penuh pada perangkat ANDROID 11 - 17+ (NEW VERSION) lintas berbagai brand smartphone dan chipset.',
+    title: 'Kompatibilitas Android & iOS',
+    description: 'Teruji dan kompatibel penuh pada perangkat Android (versi 11 - 17+) maupun iOS (iPhone iOS 15 - 27).',
     tag: 'Kompatibilitas',
   },
   {
@@ -27,9 +27,9 @@ const companyBenefits = [
   },
   {
     icon: Key,
-    title: 'Lisensi Permanen',
-    description: 'Sistem pembelian satu kali tanpa biaya langganan bulanan tersembunyi, berlaku seumur hidup (lifetime).',
-    tag: 'Sekali Bayar',
+    title: 'Pilihan Durasi & Permanen',
+    description: 'Tersedia pilihan durasi fleksibel hingga lisensi permanen (lifetime) tanpa biaya langganan bulanan tersembunyi.',
+    tag: 'Fleksibel',
   },
   {
     icon: Headphones,
@@ -46,7 +46,7 @@ export default function WhyChooseZX() {
         <span className="section-pretitle">STANDAR KUALITAS KAMI</span>
         <h2 className="section-main-title">Keunggulan Layanan ZetXiters</h2>
         <p className="section-subtext">
-          Alasan mengapa ribuan pengguna mempercayakan optimasi gaming Android mereka kepada ZetXiters Company.
+          Alasan mengapa ribuan pengguna mempercayakan optimasi gaming perangkat mereka kepada ZetXiters Company.
         </p>
       </div>
 

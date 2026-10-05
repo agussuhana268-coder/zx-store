@@ -1,10 +1,27 @@
-import { useState } from 'react';
-import { Check, ArrowRight, ShieldCheck, ChevronDown, Smartphone, Info } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Check, ArrowRight, ShieldCheck, ChevronDown, Info } from 'lucide-react';
 import { calculateSavings } from '../data/products';
+import PlatformIcon from './PlatformIcon';
 
 export default function ProductCard({ product, index, isPromo, onSelectProduct }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
+
+  const defaultDuration =
+    product?.durations?.find((d) => d.isDefault) ||
+    product?.durations?.[0] ||
+    null;
+
+  const [selectedDuration, setSelectedDuration] = useState(defaultDuration);
+
+  // Synchronize duration if product changes
+  useEffect(() => {
+    const nextDefault =
+      product?.durations?.find((d) => d.isDefault) ||
+      product?.durations?.[0] ||
+      null;
+    setSelectedDuration(nextDefault);
+  }, [product]);
 
   const features = Array.isArray(product.features) ? product.features : [];
   const initialCount = 8;
@@ -14,8 +31,30 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
   const initialFeatures = features.slice(0, initialCount);
   const extraFeatures = features.slice(initialCount);
 
-  const hasActivePromo = Boolean(isPromo && product.promoPrice);
-  const savings = hasActivePromo ? calculateSavings(product.price, product.promoPrice) : null;
+  // Current active pricing & license based on selected duration
+  const activePrice = selectedDuration ? selectedDuration.price : product.price;
+  const activePromoPrice = selectedDuration?.promoPrice || null;
+  const hasActivePromo = Boolean(isPromo && activePromoPrice);
+  const savings = hasActivePromo ? calculateSavings(activePrice, activePromoPrice) : null;
+  const activeLicense = selectedDuration
+    ? (selectedDuration.label.toLowerCase().includes('permanen')
+        ? (product.license || 'Lisensi Permanen / Sekali Bayar')
+        : `Lisensi Aktif ${selectedDuration.label}`)
+    : (product.license || 'Lisensi Permanen / Sekali Bayar');
+
+  const handleOrder = () => {
+    onSelectProduct({
+      ...product,
+      selectedDuration,
+      price: activePrice,
+      promoPrice: activePromoPrice,
+      license: selectedDuration?.label.toLowerCase().includes('permanen')
+        ? (product.license || 'PERMANEN / LIFETIME')
+        : `DURASI ${selectedDuration ? selectedDuration.label.toUpperCase() : ''}`,
+    });
+  };
+
+  const isIos = product.platform?.toLowerCase().includes('ios');
 
   return (
     <div className="pricing-card reveal" style={delayStyle}>
@@ -23,16 +62,23 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
         <div className="card-header-row">
           <div>
             <h3 className="card-product-title">{product.name}</h3>
-            {product.compatibility && (
-              <div className="card-compat-pill">
-                <Smartphone size={12} />
-                <span>{product.compatibility}</span>
-              </div>
-            )}
+            <div className="card-tags-row">
+              {product.platform && (
+                <span className={`card-platform-pill ${isIos ? 'ios' : 'android'}`}>
+                  <PlatformIcon platform={product.platform} size={12} className="platform-icon" />
+                  <span>{product.platform}</span>
+                </span>
+              )}
+              {product.compatibility && (
+                <div className="card-compat-pill">
+                  <span>{product.compatibility}</span>
+                </div>
+              )}
+            </div>
           </div>
           {product.badge && (
             <div className="card-badge-container">
-              <span className="badge-standard">{product.badge}</span>
+              <span className={`badge-standard ${isIos ? 'badge-ios' : ''}`}>{product.badge}</span>
             </div>
           )}
         </div>
@@ -55,21 +101,45 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
           </div>
         )}
 
+        {/* Duration Selector */}
+        {product.durations && product.durations.length > 0 && (
+          <div className="card-duration-selector">
+            <span className="duration-selector-label">Pilihan Durasi Lisensi:</span>
+            <div className="duration-options-grid">
+              {product.durations.map((dur) => {
+                const isSelected = selectedDuration?.id === dur.id;
+                return (
+                  <button
+                    key={dur.id}
+                    type="button"
+                    className={`btn-duration-option ${isSelected ? 'active' : ''}`}
+                    onClick={() => setSelectedDuration(dur)}
+                    aria-pressed={isSelected}
+                  >
+                    <span className="duration-btn-label">{dur.label}</span>
+                    <span className="duration-btn-price">{dur.price}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         <div className="card-price-block">
           {hasActivePromo ? (
             <div>
-              <div className="card-price-val">{product.promoPrice}</div>
+              <div className="card-price-val">{activePromoPrice}</div>
               <div className="card-price-sub">
-                <span className="price-strikethrough">{product.price}</span>
+                <span className="price-strikethrough">{activePrice}</span>
                 {savings && <span className="price-savings-tag">{savings}</span>}
               </div>
             </div>
           ) : (
             <div>
-              <div className="card-price-val">{product.price}</div>
+              <div className="card-price-val">{activePrice}</div>
               <div className="card-price-note">
                 <ShieldCheck size={13} className="note-shield" />
-                <span>{product.license || 'Lisensi Permanen / Sekali Bayar'}</span>
+                <span>{activeLicense}</span>
               </div>
             </div>
           )}
@@ -123,7 +193,7 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
       <button
         type="button"
         className="btn-card-order primary"
-        onClick={() => onSelectProduct(product)}
+        onClick={handleOrder}
       >
         <span>Pesan {product.name}</span>
         <ArrowRight size={15} />

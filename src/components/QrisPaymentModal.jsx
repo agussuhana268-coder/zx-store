@@ -10,9 +10,9 @@ import {
   ArrowLeft,
   Info,
   CheckCircle2,
-  Smartphone,
   AlertCircle
 } from 'lucide-react';
+import PlatformIcon from './PlatformIcon';
 import {
   ADMIN_WHATSAPP_NUMBER,
   ORDER_STATUS,
@@ -271,13 +271,18 @@ export default function QrisPaymentModal({
           <div className="qris-product-subline">
             <span className="qris-product-name">{product?.name}</span>
             <div className="qris-product-tags">
+              {product?.platform && (
+                <span className={`summary-platform-pill ${String(product.platform).toLowerCase().includes('ios') ? 'ios' : 'android'}`}>
+                  <PlatformIcon platform={product.platform} size={12} className="platform-icon" />
+                  <span>{product.platform}</span>
+                </span>
+              )}
               <span className="summary-license-pill">
                 <ShieldCheck size={12} />
                 <span>{product?.license || 'Permanen / Lifetime'}</span>
               </span>
               {product?.compatibility && (
                 <span className="summary-compat-pill">
-                  <Smartphone size={12} />
                   <span>{product.compatibility}</span>
                 </span>
               )}

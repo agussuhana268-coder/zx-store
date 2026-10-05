@@ -7,7 +7,7 @@ export default function AboutCompany() {
         <span className="section-pretitle">PROFIL PERUSAHAAN</span>
         <h2 className="section-main-title">Mengenal ZetXiters Company</h2>
         <p className="section-subtext">
-          Penyedia terpercaya tools optimasi dan konfigurasi sistem gaming Android di bawah naungan MDZZXITERS.
+          Penyedia terpercaya tools optimasi dan konfigurasi sistem gaming Android & iOS di bawah naungan MDZZXITERS.
         </p>
       </div>
 
