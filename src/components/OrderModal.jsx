@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, Send, ShieldCheck, Smartphone, QrCode, MessageCircle, ArrowRight } from 'lucide-react';
-import { generateOrderId } from '../utils/order';
+import { createOrder } from '../utils/order';
 
 export default function OrderModal({ product, onCloseModal, isPromo, onProceedToQris }) {
   const [customerName, setCustomerName] = useState('');
@@ -66,14 +66,14 @@ export default function OrderModal({ product, onCloseModal, isPromo, onProceedTo
 
     // If QRIS payment method is selected
     if (paymentMethod === 'qris' && onProceedToQris) {
-      const newOrderId = generateOrderId();
-      onProceedToQris({
-        orderId: newOrderId,
+      const newOrder = createOrder({
         product,
-        totalPrice: effectivePrice,
+        total: effectivePrice,
         customerName: nameTrimmed,
         customerContact: normalizedPhone,
+        paymentMethod: 'QRIS_DANA',
       });
+      onProceedToQris(newOrder);
       return;
     }
 

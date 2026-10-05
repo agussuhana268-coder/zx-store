@@ -1835,6 +1835,32 @@ a {
   border: 1px solid rgba(210, 153, 34, 0.35);
 }
 
+.status-success {
+  background: rgba(35, 134, 54, 0.12);
+  border: 1px solid rgba(46, 160, 67, 0.4);
+}
+
+.status-success .status-badge-row {
+  color: #3FB950;
+}
+
+.status-success .status-highlight-text {
+  color: #3FB950;
+}
+
+.status-cancelled {
+  background: rgba(248, 81, 73, 0.1);
+  border: 1px solid rgba(248, 81, 73, 0.35);
+}
+
+.status-cancelled .status-badge-row {
+  color: #F85149;
+}
+
+.status-cancelled .status-highlight-text {
+  color: #FF7B72;
+}
+
 .status-badge-row {
   display: flex;
   align-items: center;

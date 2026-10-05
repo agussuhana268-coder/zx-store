@@ -11,6 +11,7 @@ import HowItWorks from './components/HowItWorks';
 import AboutSupport from './components/AboutSupport';
 import Footer from './components/Footer';
 import { products, isPromotionActive } from './data/products';
+import { updateOrderStatus } from './utils/order';
 
 export default function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -55,6 +56,22 @@ export default function App() {
 
   const closeOrderModal = () => {
     setSelectedProduct(null);
+  };
+
+  const handleUpdateOrderStatus = (orderId, targetStatus, role) => {
+    if (!qrisOrder || qrisOrder.orderId !== orderId) {
+      console.warn(`Order dengan ID "${orderId}" tidak ditemukan.`);
+      return false;
+    }
+
+    try {
+      const updatedOrder = updateOrderStatus(qrisOrder, targetStatus, role);
+      setQrisOrder(updatedOrder);
+      return true;
+    } catch (err) {
+      console.error('Gagal memperbarui status order:', err.message);
+      return false;
+    }
   };
 
   return (
@@ -124,6 +141,7 @@ export default function App() {
             setSelectedProduct(qrisOrder.product);
             setQrisOrder(null);
           }}
+          onUpdateOrderStatus={handleUpdateOrderStatus}
         />
       )}
     </div>

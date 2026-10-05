@@ -5,6 +5,16 @@
 export const ADMIN_WHATSAPP_NUMBER = '6287833947151';
 
 /**
+ * Standard Order Statuses
+ */
+export const ORDER_STATUS = {
+  PENDING_PAYMENT: 'PENDING_PAYMENT',
+  WAITING_VERIFICATION: 'WAITING_VERIFICATION',
+  SUCCESS: 'SUCCESS',
+  CANCELLED: 'CANCELLED',
+};
+
+/**
  * Generates a unique, readable Order ID
  * Format: ZX-YYMMDD-XXXX (e.g. ZX-261005-4819)
  */
@@ -16,6 +26,86 @@ export function generateOrderId() {
   const dateSegment = `${year}${month}${day}`;
   const randomSegment = Math.floor(1000 + Math.random() * 9000);
   return `ZX-${dateSegment}-${randomSegment}`;
+}
+
+/**
+ * Factory function to create a standardized order object
+ */
+export function createOrder({
+  product,
+  total,
+  customerName = '',
+  customerContact = '',
+  paymentMethod = 'QRIS_DANA',
+}) {
+  const timestamp = new Date().toISOString();
+
+  return {
+    orderId: generateOrderId(),
+    product,
+    total,
+    status: ORDER_STATUS.PENDING_PAYMENT,
+    createdAt: timestamp,
+    updatedAt: timestamp,
+    customerName,
+    customerContact,
+    paymentMethod,
+  };
+}
+
+/**
+ * Validates whether a status transition is permitted based on user role
+ * 
+ * Rules:
+ * - CUSTOMER: PENDING_PAYMENT -> WAITING_VERIFICATION
+ * - ADMIN:    WAITING_VERIFICATION -> SUCCESS
+ *             WAITING_VERIFICATION -> CANCELLED
+ * - Other transitions are rejected.
+ */
+export function canTransitionStatus(currentStatus, targetStatus, role) {
+  if (!role || !currentStatus || !targetStatus) {
+    return false;
+  }
+
+  const normalizedRole = String(role).trim().toUpperCase();
+
+  if (normalizedRole === 'CUSTOMER') {
+    return (
+      currentStatus === ORDER_STATUS.PENDING_PAYMENT &&
+      targetStatus === ORDER_STATUS.WAITING_VERIFICATION
+    );
+  }
+
+  if (normalizedRole === 'ADMIN') {
+    return (
+      currentStatus === ORDER_STATUS.WAITING_VERIFICATION &&
+      (targetStatus === ORDER_STATUS.SUCCESS || targetStatus === ORDER_STATUS.CANCELLED)
+    );
+  }
+
+  return false;
+}
+
+/**
+ * Helper to update order status while updating the `updatedAt` timestamp
+ * Throws an Error if transition is not permitted
+ */
+export function updateOrderStatus(order, targetStatus, role) {
+  if (!order || typeof order !== 'object') {
+    throw new Error('Objek order tidak valid.');
+  }
+
+  if (!canTransitionStatus(order.status, targetStatus, role)) {
+    throw new Error(
+      `Transisi status dari '${order.status}' ke '${targetStatus}' tidak diizinkan untuk role '${role}'.`
+    );
+  }
+
+  return {
+    ...order,
+    status: targetStatus,
+    updatedAt: new Date().toISOString(),
+  };
 }
 
 /**
