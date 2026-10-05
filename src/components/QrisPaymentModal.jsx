@@ -19,9 +19,21 @@ import {
   buildQrisConfirmationMessage,
   getWhatsAppUrl
 } from '../utils/order';
+import { markOrderPaid, getOrder } from '../utils/api';
 
-export default function QrisPaymentModal({ order, onClose, onBack, onUpdateOrderStatus }) {
+export default function QrisPaymentModal({
+  order,
+  onClose,
+  onBack,
+  onUpdateOrderStatus,
+  onSyncOrder,
+}) {
   const [copiedField, setCopiedField] = useState(null);
+  const [isReportingPaid, setIsReportingPaid] = useState(false);
+  const [paidError, setPaidError] = useState('');
+
+  const orderId = order?.orderId || order?.order_id;
+  const currentStatus = order?.status || ORDER_STATUS.PENDING_PAYMENT;
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -33,17 +45,48 @@ export default function QrisPaymentModal({ order, onClose, onBack, onUpdateOrder
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
+  // Polling for status updates only when in WAITING_VERIFICATION (5-10 seconds interval)
+  useEffect(() => {
+    if (!orderId || currentStatus !== ORDER_STATUS.WAITING_VERIFICATION) {
+      return;
+    }
+
+    let isMounted = true;
+
+    const pollStatus = async () => {
+      try {
+        const latestOrder = await getOrder(orderId);
+        if (!isMounted) return;
+        if (latestOrder && latestOrder.status && latestOrder.status !== currentStatus) {
+          if (onSyncOrder) {
+            onSyncOrder(latestOrder);
+          } else if (onUpdateOrderStatus) {
+            onUpdateOrderStatus(orderId, latestOrder.status, 'ADMIN');
+          }
+        }
+      } catch (err) {
+        // Polling failed temporarily - keep current status and retry on next interval
+        console.warn('Polling status order gagal sementara:', err.message);
+      }
+    };
+
+    const intervalId = setInterval(pollStatus, 7000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(intervalId);
+    };
+  }, [orderId, currentStatus, onSyncOrder, onUpdateOrderStatus]);
+
   if (!order) return null;
 
   const {
-    orderId,
     product,
     customerName = '',
     customerContact = '',
   } = order;
 
   const displayTotal = order.total || order.totalPrice || '';
-  const currentStatus = order.status || ORDER_STATUS.PENDING_PAYMENT;
 
   const isPending = currentStatus === ORDER_STATUS.PENDING_PAYMENT;
   const isWaitingVerification = currentStatus === ORDER_STATUS.WAITING_VERIFICATION;
@@ -63,14 +106,27 @@ export default function QrisPaymentModal({ order, onClose, onBack, onUpdateOrder
     }
   };
 
-  const handleReportPaid = () => {
-    if (!isPending) return;
-    if (onUpdateOrderStatus) {
-      onUpdateOrderStatus(
-        order.orderId,
-        ORDER_STATUS.WAITING_VERIFICATION,
-        'CUSTOMER'
-      );
+  const handleReportPaid = async () => {
+    if (!isPending || isReportingPaid) return;
+    setIsReportingPaid(true);
+    setPaidError('');
+
+    try {
+      const updatedOrder = await markOrderPaid(orderId);
+      if (onSyncOrder) {
+        onSyncOrder(updatedOrder);
+      } else if (onUpdateOrderStatus) {
+        onUpdateOrderStatus(
+          orderId,
+          ORDER_STATUS.WAITING_VERIFICATION,
+          'CUSTOMER'
+        );
+      }
+    } catch (err) {
+      console.error('Gagal melaporkan status pembayaran:', err);
+      setPaidError(err.message || 'Gagal memverifikasi pembayaran. Silakan coba lagi.');
+    } finally {
+      setIsReportingPaid(false);
     }
   };
 
@@ -282,10 +338,26 @@ export default function QrisPaymentModal({ order, onClose, onBack, onUpdateOrder
                 type="button"
                 className="btn-dialog-submit qris-btn-paid"
                 onClick={handleReportPaid}
+                disabled={isReportingPaid}
               >
-                <CheckCircle2 size={17} />
-                <span>Saya Sudah Membayar</span>
+                {isReportingPaid ? (
+                  <>
+                    <Clock size={17} />
+                    <span>Memverifikasi Pembayaran...</span>
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 size={17} />
+                    <span>Saya Sudah Membayar</span>
+                  </>
+                )}
               </button>
+
+              {paidError && (
+                <div className="field-error" style={{ textAlign: 'center', marginTop: '10px' }}>
+                  {paidError}
+                </div>
+              )}
 
               <div className="qris-security-disclaimer">
                 <ShieldCheck size={14} className="disclaimer-icon" />

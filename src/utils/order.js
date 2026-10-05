@@ -14,44 +14,6 @@ export const ORDER_STATUS = {
   CANCELLED: 'CANCELLED',
 };
 
-/**
- * Generates a unique, readable Order ID
- * Format: ZX-YYMMDD-XXXX (e.g. ZX-261005-4819)
- */
-export function generateOrderId() {
-  const now = new Date();
-  const year = String(now.getFullYear()).slice(-2);
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const dateSegment = `${year}${month}${day}`;
-  const randomSegment = Math.floor(1000 + Math.random() * 9000);
-  return `ZX-${dateSegment}-${randomSegment}`;
-}
-
-/**
- * Factory function to create a standardized order object
- */
-export function createOrder({
-  product,
-  total,
-  customerName = '',
-  customerContact = '',
-  paymentMethod = 'QRIS_DANA',
-}) {
-  const timestamp = new Date().toISOString();
-
-  return {
-    orderId: generateOrderId(),
-    product,
-    total,
-    status: ORDER_STATUS.PENDING_PAYMENT,
-    createdAt: timestamp,
-    updatedAt: timestamp,
-    customerName,
-    customerContact,
-    paymentMethod,
-  };
-}
 
 /**
  * Validates whether a status transition is permitted based on user role

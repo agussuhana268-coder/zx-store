@@ -11,12 +11,45 @@ import HowItWorks from './components/HowItWorks';
 import AboutSupport from './components/AboutSupport';
 import Footer from './components/Footer';
 import { products, isPromotionActive } from './data/products';
-import { updateOrderStatus } from './utils/order';
+import { updateOrderStatus, ORDER_STATUS } from './utils/order';
+import { getOrder } from './utils/api';
 
 export default function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [qrisOrder, setQrisOrder] = useState(null);
   const [isPromo, setIsPromo] = useState(isPromotionActive);
+
+  // Restore active order from backend on page refresh
+  useEffect(() => {
+    try {
+      const savedOrderId = localStorage.getItem('zx_active_order_id');
+      if (!savedOrderId) return;
+
+      let isCancelled = false;
+      getOrder(savedOrderId)
+        .then((existingOrder) => {
+          if (isCancelled || !existingOrder) return;
+          if (
+            existingOrder.status === ORDER_STATUS.PENDING_PAYMENT ||
+            existingOrder.status === ORDER_STATUS.WAITING_VERIFICATION
+          ) {
+            setQrisOrder(existingOrder);
+          } else {
+            localStorage.removeItem('zx_active_order_id');
+          }
+        })
+        .catch((err) => {
+          console.warn('Gagal memulihkan status order dari backend:', err.message);
+          localStorage.removeItem('zx_active_order_id');
+        });
+
+      return () => {
+        isCancelled = true;
+      };
+    } catch {
+      // Ignore if localStorage unavailable
+    }
+  }, []);
 
   useEffect(() => {
     setIsPromo(isPromotionActive());
@@ -59,7 +92,8 @@ export default function App() {
   };
 
   const handleUpdateOrderStatus = (orderId, targetStatus, role) => {
-    if (!qrisOrder || qrisOrder.orderId !== orderId) {
+    const currentOrderId = qrisOrder?.orderId || qrisOrder?.order_id;
+    if (!qrisOrder || currentOrderId !== orderId) {
       console.warn(`Order dengan ID "${orderId}" tidak ditemukan.`);
       return false;
     }
@@ -67,10 +101,34 @@ export default function App() {
     try {
       const updatedOrder = updateOrderStatus(qrisOrder, targetStatus, role);
       setQrisOrder(updatedOrder);
+      if (
+        targetStatus === ORDER_STATUS.SUCCESS ||
+        targetStatus === ORDER_STATUS.CANCELLED
+      ) {
+        try {
+          localStorage.removeItem('zx_active_order_id');
+        } catch {}
+      }
       return true;
     } catch (err) {
       console.error('Gagal memperbarui status order:', err.message);
       return false;
+    }
+  };
+
+  const handleSyncOrder = (updatedOrder) => {
+    if (!updatedOrder) return;
+    setQrisOrder((prev) => ({
+      ...prev,
+      ...updatedOrder,
+    }));
+    if (
+      updatedOrder.status === ORDER_STATUS.SUCCESS ||
+      updatedOrder.status === ORDER_STATUS.CANCELLED
+    ) {
+      try {
+        localStorage.removeItem('zx_active_order_id');
+      } catch {}
     }
   };
 
@@ -129,6 +187,12 @@ export default function App() {
           onProceedToQris={(orderData) => {
             setSelectedProduct(null);
             setQrisOrder(orderData);
+            try {
+              const activeId = orderData.orderId || orderData.order_id;
+              if (activeId) {
+                localStorage.setItem('zx_active_order_id', activeId);
+              }
+            } catch {}
           }}
         />
       )}
@@ -136,12 +200,21 @@ export default function App() {
       {qrisOrder && (
         <QrisPaymentModal
           order={qrisOrder}
-          onClose={() => setQrisOrder(null)}
+          onClose={() => {
+            setQrisOrder(null);
+            try {
+              localStorage.removeItem('zx_active_order_id');
+            } catch {}
+          }}
           onBack={() => {
             setSelectedProduct(qrisOrder.product);
             setQrisOrder(null);
+            try {
+              localStorage.removeItem('zx_active_order_id');
+            } catch {}
           }}
           onUpdateOrderStatus={handleUpdateOrderStatus}
+          onSyncOrder={handleSyncOrder}
         />
       )}
     </div>

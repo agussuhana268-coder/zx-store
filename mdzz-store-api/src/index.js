@@ -104,7 +104,63 @@ function formatOrder(row) {
 }
 
 /**
- * Customer Orders API Handler
+ * Timing-safe string comparison to protect against timing attacks
+ */
+function timingSafeCompare(a, b) {
+  if (typeof a !== 'string' || typeof b !== 'string') return false;
+  if (a.length !== b.length) return false;
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return result === 0;
+}
+
+/**
+ * Helper to verify Admin API Key from Authorization header
+ */
+function verifyAdminAuth(request, env) {
+  const adminApiKey = env && env.ADMIN_API_KEY;
+  if (!adminApiKey || typeof adminApiKey !== 'string' || adminApiKey.trim() === '') {
+    return {
+      ok: false,
+      status: 401,
+      error: 'Unauthorized: Admin authentication secret is not configured.',
+    };
+  }
+
+  const authHeader = request.headers.get('Authorization') || request.headers.get('authorization');
+  if (!authHeader) {
+    return {
+      ok: false,
+      status: 401,
+      error: 'Unauthorized: Missing Authorization header.',
+    };
+  }
+
+  const match = authHeader.match(/^Bearer\s+(.+)$/i);
+  if (!match) {
+    return {
+      ok: false,
+      status: 401,
+      error: 'Unauthorized: Invalid Authorization format. Expected "Bearer <ADMIN_API_KEY>".',
+    };
+  }
+
+  const providedKey = match[1].trim();
+  if (!timingSafeCompare(providedKey, adminApiKey.trim())) {
+    return {
+      ok: false,
+      status: 401,
+      error: 'Unauthorized: Invalid credentials.',
+    };
+  }
+
+  return { ok: true };
+}
+
+/**
+ * Customer & Admin Orders API Handler
  */
 export default {
   async fetch(request, env, _ctx) {
@@ -135,7 +191,203 @@ export default {
         );
       }
 
-      // 3. POST /api/orders -> Create new order
+      // 3. Admin Authentication Guard for all /api/admin/* endpoints
+      if (pathname.startsWith('/api/admin')) {
+        const auth = verifyAdminAuth(request, env);
+        if (!auth.ok) {
+          return jsonResponse(
+            {
+              success: false,
+              error: auth.error,
+            },
+            auth.status,
+            request
+          );
+        }
+      }
+
+      // 4. Admin API Endpoints
+      // 4.1. GET /api/admin/orders -> List orders (supports optional ?status= filter)
+      if (method === 'GET' && pathname === '/api/admin/orders') {
+        if (!env.DB) {
+          return jsonResponse(
+            { success: false, error: 'Database binding "DB" is not configured.' },
+            500,
+            request
+          );
+        }
+
+        const statusFilter = url.searchParams.get('status');
+        let results;
+
+        if (statusFilter) {
+          const stmt = env.DB.prepare(
+            'SELECT * FROM orders WHERE status = ? ORDER BY created_at DESC'
+          ).bind(statusFilter.toUpperCase());
+          const res = await stmt.all();
+          results = res.results || [];
+        } else {
+          const stmt = env.DB.prepare(
+            'SELECT * FROM orders ORDER BY created_at DESC'
+          );
+          const res = typeof stmt.all === 'function' ? await stmt.all() : await stmt.bind().all();
+          results = res.results || [];
+        }
+
+        const orders = results.map(formatOrder);
+
+        return jsonResponse(
+          {
+            success: true,
+            count: orders.length,
+            total: orders.length,
+            orders,
+            data: orders,
+          },
+          200,
+          request
+        );
+      }
+
+      // 4.2. POST /api/admin/orders/:orderId/complete -> Complete order (WAITING_VERIFICATION -> SUCCESS)
+      const adminCompleteMatch = pathname.match(/^\/api\/admin\/orders\/([^/]+)\/complete\/?$/);
+      if (method === 'POST' && adminCompleteMatch) {
+        const orderId = decodeURIComponent(adminCompleteMatch[1]);
+
+        if (!env.DB) {
+          return jsonResponse(
+            { success: false, error: 'Database binding "DB" is not configured.' },
+            500,
+            request
+          );
+        }
+
+        const existing = await env.DB.prepare(
+          'SELECT * FROM orders WHERE order_id = ?'
+        )
+          .bind(orderId)
+          .first();
+
+        if (!existing) {
+          return jsonResponse(
+            { success: false, error: `Order with ID "${orderId}" not found.` },
+            404,
+            request
+          );
+        }
+
+        // Only allow transition from WAITING_VERIFICATION to SUCCESS
+        if (existing.status !== ORDER_STATUS.WAITING_VERIFICATION) {
+          return jsonResponse(
+            {
+              success: false,
+              error: `Invalid status transition: order status "${existing.status}" cannot be changed to "${ORDER_STATUS.SUCCESS}". Only orders with status "${ORDER_STATUS.WAITING_VERIFICATION}" can be completed.`,
+              current_status: existing.status,
+            },
+            400,
+            request
+          );
+        }
+
+        const updatedAt = new Date().toISOString();
+        const targetStatus = ORDER_STATUS.SUCCESS;
+
+        await env.DB.prepare(
+          'UPDATE orders SET status = ?, updated_at = ? WHERE order_id = ?'
+        )
+          .bind(targetStatus, updatedAt, orderId)
+          .run();
+
+        const updatedRow = {
+          ...existing,
+          status: targetStatus,
+          updated_at: updatedAt,
+        };
+
+        const formattedOrder = formatOrder(updatedRow);
+
+        return jsonResponse(
+          {
+            success: true,
+            message: 'Order completed successfully.',
+            order: formattedOrder,
+            data: formattedOrder,
+          },
+          200,
+          request
+        );
+      }
+
+      // 4.3. POST /api/admin/orders/:orderId/cancel -> Cancel order (WAITING_VERIFICATION -> CANCELLED)
+      const adminCancelMatch = pathname.match(/^\/api\/admin\/orders\/([^/]+)\/cancel\/?$/);
+      if (method === 'POST' && adminCancelMatch) {
+        const orderId = decodeURIComponent(adminCancelMatch[1]);
+
+        if (!env.DB) {
+          return jsonResponse(
+            { success: false, error: 'Database binding "DB" is not configured.' },
+            500,
+            request
+          );
+        }
+
+        const existing = await env.DB.prepare(
+          'SELECT * FROM orders WHERE order_id = ?'
+        )
+          .bind(orderId)
+          .first();
+
+        if (!existing) {
+          return jsonResponse(
+            { success: false, error: `Order with ID "${orderId}" not found.` },
+            404,
+            request
+          );
+        }
+
+        // Status rule: WAITING_VERIFICATION -> CANCELLED only. Do NOT allow cancel from PENDING_PAYMENT for now.
+        if (existing.status !== ORDER_STATUS.WAITING_VERIFICATION) {
+          return jsonResponse(
+            {
+              success: false,
+              error: `Invalid status transition: order status "${existing.status}" cannot be changed to "${ORDER_STATUS.CANCELLED}". Only orders with status "${ORDER_STATUS.WAITING_VERIFICATION}" can be cancelled.`,
+              current_status: existing.status,
+            },
+            400,
+            request
+          );
+        }
+
+        const updatedAt = new Date().toISOString();
+        const targetStatus = ORDER_STATUS.CANCELLED;
+
+        await env.DB.prepare(
+          'UPDATE orders SET status = ?, updated_at = ? WHERE order_id = ?'
+        )
+          .bind(targetStatus, updatedAt, orderId)
+          .run();
+
+        const updatedRow = {
+          ...existing,
+          status: targetStatus,
+          updated_at: updatedAt,
+        };
+
+        const formattedOrder = formatOrder(updatedRow);
+
+        return jsonResponse(
+          {
+            success: true,
+            message: 'Order cancelled successfully.',
+            order: formattedOrder,
+            data: formattedOrder,
+          },
+          200,
+          request
+        );
+      }
+
+      // 5. POST /api/orders -> Create new order
       if (method === 'POST' && pathname === '/api/orders') {
         let body;
         try {

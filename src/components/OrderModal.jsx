@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { X, Send, ShieldCheck, Smartphone, QrCode, MessageCircle, ArrowRight } from 'lucide-react';
-import { createOrder } from '../utils/order';
+import { createOrder } from '../utils/api';
 
 export default function OrderModal({ product, onCloseModal, isPromo, onProceedToQris }) {
   const [customerName, setCustomerName] = useState('');
   const [customerContact, setCustomerContact] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('qris'); // 'qris' | 'whatsapp'
   const [errors, setErrors] = useState({ name: '', contact: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -66,14 +68,35 @@ export default function OrderModal({ product, onCloseModal, isPromo, onProceedTo
 
     // If QRIS payment method is selected
     if (paymentMethod === 'qris' && onProceedToQris) {
-      const newOrder = createOrder({
-        product,
+      if (isSubmitting) return;
+
+      setIsSubmitting(true);
+      setSubmitError('');
+
+      createOrder({
+        product: {
+          id: product.id,
+          name: product.name,
+          license: product.license || 'Permanen / Lifetime',
+          compatibility: product.compatibility || '',
+        },
         total: effectivePrice,
         customerName: nameTrimmed,
         customerContact: normalizedPhone,
         paymentMethod: 'QRIS_DANA',
-      });
-      onProceedToQris(newOrder);
+      })
+        .then((newOrder) => {
+          onProceedToQris(newOrder);
+        })
+        .catch((err) => {
+          console.error('Gagal membuat pesanan via API:', err);
+          setSubmitError(
+            err.message || 'Gagal memproses pesanan ke server. Periksa koneksi internet Anda dan coba lagi.'
+          );
+        })
+        .finally(() => {
+          setIsSubmitting(false);
+        });
       return;
     }
 
@@ -203,6 +226,7 @@ export default function OrderModal({ product, onCloseModal, isPromo, onProceedTo
               onChange={(e) => {
                 setCustomerName(e.target.value);
                 if (errors.name) setErrors((prev) => ({ ...prev, name: '' }));
+                if (submitError) setSubmitError('');
               }}
             />
             {errors.name && <span className="field-error">{errors.name}</span>}
@@ -221,6 +245,7 @@ export default function OrderModal({ product, onCloseModal, isPromo, onProceedTo
               onChange={(e) => {
                 setCustomerContact(e.target.value);
                 if (errors.contact) setErrors((prev) => ({ ...prev, contact: '' }));
+                if (submitError) setSubmitError('');
               }}
             />
             {errors.contact && <span className="field-error">{errors.contact}</span>}
@@ -235,14 +260,24 @@ export default function OrderModal({ product, onCloseModal, isPromo, onProceedTo
             </span>
           </div>
 
+          {submitError && (
+            <div className="field-error" style={{ marginBottom: '14px', textAlign: 'center', fontSize: '12px' }}>
+              {submitError}
+            </div>
+          )}
+
           <div className="dialog-actions">
             {paymentMethod === 'qris' ? (
-              <button type="submit" className="btn-dialog-submit">
-                <span>Lanjut ke Pembayaran QRIS</span>
-                <ArrowRight size={15} />
+              <button
+                type="submit"
+                className="btn-dialog-submit"
+                disabled={isSubmitting}
+              >
+                <span>{isSubmitting ? 'Memproses Pesanan...' : 'Lanjut ke Pembayaran QRIS'}</span>
+                {!isSubmitting && <ArrowRight size={15} />}
               </button>
             ) : (
-              <button type="submit" className="btn-dialog-submit">
+              <button type="submit" className="btn-dialog-submit" disabled={isSubmitting}>
                 <span>Lanjutkan ke WhatsApp</span>
                 <Send size={15} />
               </button>
