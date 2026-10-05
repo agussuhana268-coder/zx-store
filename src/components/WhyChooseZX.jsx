@@ -1,4 +1,4 @@
-import { ShieldCheck, Smartphone, Zap, CheckCircle, Key, Headphones } from 'lucide-react';
+import { ShieldCheck, Smartphone, TrendingUp, CheckCircle, Key, Headphones } from 'lucide-react';
 
 const companyBenefits = [
   {
@@ -14,7 +14,7 @@ const companyBenefits = [
     tag: 'Kompatibilitas',
   },
   {
-    icon: Zap,
+    icon: TrendingUp,
     title: 'Optimalisasi Terkalibrasi',
     description: 'Fokus pada peningkatan respon sentuhan layar, pengurangan touch latency, dan stabilitas frame rate game yang konsisten.',
     tag: 'Performa',

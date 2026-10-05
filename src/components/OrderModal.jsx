@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import { X, Send, ShieldCheck, QrCode, MessageCircle, ArrowRight } from 'lucide-react';
+import { X, ShieldCheck, QrCode, ArrowRight } from 'lucide-react';
 import { createOrder } from '../utils/api';
 import PlatformIcon from './PlatformIcon';
 
 export default function OrderModal({ product, onCloseModal, isPromo: _isPromo, onProceedToQris }) {
   const [customerName, setCustomerName] = useState('');
   const [customerContact, setCustomerContact] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('qris'); // 'qris' | 'whatsapp'
   const [errors, setErrors] = useState({ name: '', contact: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
@@ -93,66 +92,40 @@ export default function OrderModal({ product, onCloseModal, isPromo: _isPromo, o
     const normalizedPhone = normalizePhone(contactTrimmed);
     const orderProductName = `${product.name} — ${durationLabel}`;
 
-    // If QRIS payment method is selected
-    if (paymentMethod === 'qris' && onProceedToQris) {
-      if (isSubmitting) return;
+    if (isSubmitting) return;
 
-      setIsSubmitting(true);
-      setSubmitError('');
+    setIsSubmitting(true);
+    setSubmitError('');
 
-      createOrder({
-        product: {
-          id: product.id,
-          name: orderProductName,
-          baseName: product.name,
-          duration: durationLabel,
-          license: activeLicense,
-          platform: product.platform || '',
-          compatibility: product.compatibility || '',
-        },
-        total: activePrice,
-        customerName: nameTrimmed,
-        customerContact: normalizedPhone,
-        paymentMethod: 'QRIS_DANA',
-      })
-        .then((newOrder) => {
+    createOrder({
+      product: {
+        id: product.id,
+        name: orderProductName,
+        baseName: product.name,
+        duration: durationLabel,
+        license: activeLicense,
+        platform: product.platform || '',
+        compatibility: product.compatibility || '',
+      },
+      total: activePrice,
+      customerName: nameTrimmed,
+      customerContact: normalizedPhone,
+      paymentMethod: 'QRIS_DANA',
+    })
+      .then((newOrder) => {
+        if (onProceedToQris) {
           onProceedToQris(newOrder);
-        })
-        .catch((err) => {
-          console.error('Gagal membuat pesanan via API:', err);
-          setSubmitError(
-            err.message || 'Gagal memproses pesanan ke server. Periksa koneksi internet Anda dan coba lagi.'
-          );
-        })
-        .finally(() => {
-          setIsSubmitting(false);
-        });
-      return;
-    }
-
-    // Existing WhatsApp Order flow
-    const messageLines = [
-      `Halo Admin Zet Xiters, saya ingin melakukan pemesanan lisensi resmi:`,
-      `📦 *${product.name} — ${durationLabel} — ${activePrice}*`,
-      `⏱️ *Durasi:* ${durationLabel}`,
-      ...(product.platform ? [`💻 *Platform:* ${product.platform}`] : []),
-      ...(product.compatibility ? [`📱 *Kompatibilitas:* ${product.compatibility}`] : []),
-      `💰 *Total Pembayaran:* ${activePrice} (${activeLicense})`,
-      '',
-      'Berikut data pemesan:',
-      `👤 *Nama:* ${nameTrimmed}`,
-      `📞 *WhatsApp:* ${normalizedPhone}`,
-      '',
-      'Mohon petunjuk untuk proses pembayaran dan panduan pengiriman file.',
-      '',
-      'Terima kasih.'
-    ];
-
-    const orderMessage = messageLines.join('\n');
-    const whatsappUrl = `https://wa.me/6287833947151?text=${encodeURIComponent(orderMessage)}`;
-
-    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-    onCloseModal();
+        }
+      })
+      .catch((err) => {
+        console.error('Gagal membuat pesanan via API:', err);
+        setSubmitError(
+          err.message || 'Gagal memproses pesanan ke server. Periksa koneksi internet Anda dan coba lagi.'
+        );
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (
@@ -162,7 +135,7 @@ export default function OrderModal({ product, onCloseModal, isPromo: _isPromo, o
           <div>
             <h3 className="dialog-title">Formulir Pemesanan Lisensi</h3>
             <p className="dialog-subtitle">
-              Pilih metode transaksi dan lengkapi data kontak Anda.
+              Lengkapi data kontak Anda untuk pembayaran via QRIS.
             </p>
           </div>
           <button
@@ -230,41 +203,20 @@ export default function OrderModal({ product, onCloseModal, isPromo: _isPromo, o
         <form onSubmit={handleOrderSubmit} noValidate className="dialog-form">
           {/* Payment Method Selector */}
           <div className="payment-select-group">
-            <label className="input-label">Pilih Metode Transaksi</label>
+            <label className="input-label">Metode Transaksi</label>
             <div className="payment-method-grid">
-              <button
-                type="button"
-                className={`payment-method-card ${paymentMethod === 'qris' ? 'active' : ''}`}
-                onClick={() => setPaymentMethod('qris')}
-              >
+              <div className="payment-method-card active" style={{ cursor: 'default' }}>
                 <div className="method-card-head">
                   <div className="method-icon-wrap">
                     <QrCode size={16} />
                   </div>
-                  <span className="method-pill-badge">Rekomendasi</span>
+                  <span className="method-pill-badge">QRIS</span>
                 </div>
                 <div className="method-info">
-                  <span className="method-title">QRIS DANA (Semua E-Wallet)</span>
+                  <span className="method-title">QRIS (Semua E-Wallet)</span>
                   <span className="method-sub">Scan QR DANA, GoPay, OVO, ShopeePay, BCA, dll</span>
                 </div>
-              </button>
-
-              <button
-                type="button"
-                className={`payment-method-card ${paymentMethod === 'whatsapp' ? 'active' : ''}`}
-                onClick={() => setPaymentMethod('whatsapp')}
-              >
-                <div className="method-card-head">
-                  <div className="method-icon-wrap">
-                    <MessageCircle size={16} />
-                  </div>
-                  <span className="method-pill-badge manual">Manual CS</span>
-                </div>
-                <div className="method-info">
-                  <span className="method-title">WhatsApp Admin Langsung</span>
-                  <span className="method-sub">Pesan & konsultasi manual via chat WhatsApp</span>
-                </div>
-              </button>
+              </div>
             </div>
           </div>
 
@@ -309,9 +261,7 @@ export default function OrderModal({ product, onCloseModal, isPromo: _isPromo, o
           <div className="dialog-security-note">
             <ShieldCheck size={14} className="note-icon" />
             <span>
-              {paymentMethod === 'qris'
-                ? 'Transaksi diproses melalui sistem QRIS DANA ZetXiters Official.'
-                : 'Transaksi aman langsung dengan Admin WhatsApp resmi (087833947151).'}
+              Transaksi diproses melalui sistem QRIS ZetXiters Official.
             </span>
           </div>
 
@@ -322,21 +272,14 @@ export default function OrderModal({ product, onCloseModal, isPromo: _isPromo, o
           )}
 
           <div className="dialog-actions">
-            {paymentMethod === 'qris' ? (
-              <button
-                type="submit"
-                className="btn-dialog-submit"
-                disabled={isSubmitting}
-              >
-                <span>{isSubmitting ? 'Memproses Pesanan...' : 'Lanjut ke Pembayaran QRIS'}</span>
-                {!isSubmitting && <ArrowRight size={15} />}
-              </button>
-            ) : (
-              <button type="submit" className="btn-dialog-submit" disabled={isSubmitting}>
-                <span>Lanjutkan ke WhatsApp</span>
-                <Send size={15} />
-              </button>
-            )}
+            <button
+              type="submit"
+              className="btn-dialog-submit"
+              disabled={isSubmitting}
+            >
+              <span>{isSubmitting ? 'Memproses Pesanan...' : 'Lanjut ke Pembayaran QRIS'}</span>
+              {!isSubmitting && <ArrowRight size={15} />}
+            </button>
           </div>
         </form>
       </div>

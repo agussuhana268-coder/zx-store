@@ -1,4 +1,4 @@
-import { MousePointerClick, FileText, MessageCircle, CheckCircle2 } from 'lucide-react';
+import { MousePointerClick, FileText, QrCode, CheckCircle2 } from 'lucide-react';
 
 const steps = [
   {
@@ -15,14 +15,14 @@ const steps = [
   },
   {
     step: '03',
-    title: 'Konfirmasi via WhatsApp',
-    description: 'Detail pesanan terformat otomatis akan diteruskan langsung ke WhatsApp resmi Admin ZetXiters.',
-    icon: MessageCircle,
+    title: 'Pembayaran via QRIS',
+    description: 'Scan kode QRIS DANA secara instan menggunakan aplikasi e-wallet atau mobile banking Anda.',
+    icon: QrCode,
   },
   {
     step: '04',
     title: 'Aktivasi & Panduan Lengkap',
-    description: 'Selesaikan transaksi dan Admin akan langsung mengirimkan paket file produk beserta panduan instalasi.',
+    description: 'Setelah pembayaran diverifikasi, unduh paket file produk beserta panduan instalasi lengkap.',
     icon: CheckCircle2,
   },
 ];
