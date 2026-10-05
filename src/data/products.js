@@ -85,7 +85,7 @@ export const products = [
     id: 'zx-vortex',
     name: 'ZX VORTEX',
     version: 'v3.5',
-    price: 'Rp170.000',
+    price: 'Rp149.000',
     promoPrice: 'Rp139.000',
     slots: 'Tersedia • Instant Delivery',
     badge: 'VIP EDITION',

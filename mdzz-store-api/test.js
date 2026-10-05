@@ -83,10 +83,42 @@ async function runTests() {
   }
 
   const ADMIN_SECRET = 'super-secret-admin-token-12345';
+  const ADMIN_PASSWORD = 'super-secret-dashboard-password-98765';
   const env = {
     DB: new MockD1Database(),
     ADMIN_API_KEY: ADMIN_SECRET,
+    ADMIN_PASSWORD: ADMIN_PASSWORD,
   };
+
+  async function createCustomSessionToken(payload, secret) {
+    const encoder = new TextEncoder();
+    const payloadStr = JSON.stringify(payload);
+    let binary = '';
+    const bytes = encoder.encode(payloadStr);
+    for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    const encodedPayload = btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    const key = await crypto.subtle.importKey(
+      'raw',
+      encoder.encode(secret),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    );
+    const signatureBuffer = await crypto.subtle.sign(
+      'HMAC',
+      key,
+      encoder.encode(encodedPayload)
+    );
+    const sigBytes = new Uint8Array(signatureBuffer);
+    let sigBinary = '';
+    for (let i = 0; i < sigBytes.byteLength; i++) {
+      sigBinary += String.fromCharCode(sigBytes[i]);
+    }
+    const encodedSig = btoa(sigBinary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    return `${encodedPayload}.${encodedSig}`;
+  }
 
   // Test 1: OPTIONS request (CORS Preflight)
   {
@@ -440,6 +472,325 @@ async function runTests() {
     });
     const res = await worker.fetch(req, env);
     assert(res.status === 404, 'Admin unknown endpoint returns 404');
+  }
+
+  // Test 26: CORS GitHub Pages origin handling
+  {
+    const req = new Request('https://api.mdzzofficialstore.biz.id/api/orders', {
+      method: 'OPTIONS',
+      headers: {
+        Origin: 'https://agussuhana268-coder.github.io',
+        'Access-Control-Request-Method': 'POST',
+      },
+    });
+    const res = await worker.fetch(req, env);
+    assert(res.status === 204, 'GitHub Pages OPTIONS preflight returns 204');
+    assert(
+      res.headers.get('Access-Control-Allow-Origin') === 'https://agussuhana268-coder.github.io',
+      'CORS allows GitHub Pages origin'
+    );
+    assert(
+      res.headers.get('Access-Control-Allow-Headers').includes('Authorization'),
+      'CORS allows Authorization header for GitHub Pages'
+    );
+    assert(
+      res.headers.get('Access-Control-Allow-Headers').includes('Content-Type'),
+      'CORS allows Content-Type header for GitHub Pages'
+    );
+  }
+
+  // Test 27: CORS Customer website origin handling
+  {
+    const req = new Request('https://api.mdzzofficialstore.biz.id/api/orders', {
+      method: 'OPTIONS',
+      headers: {
+        Origin: 'https://mdzzofficialstore.biz.id',
+        'Access-Control-Request-Method': 'GET',
+      },
+    });
+    const res = await worker.fetch(req, env);
+    assert(
+      res.headers.get('Access-Control-Allow-Origin') === 'https://mdzzofficialstore.biz.id',
+      'CORS continues to allow customer website origin'
+    );
+  }
+
+  // Test 28: OPTIONS preflight on /api/admin/login from GitHub Pages
+  {
+    const req = new Request('https://api.mdzzofficialstore.biz.id/api/admin/login', {
+      method: 'OPTIONS',
+      headers: {
+        Origin: 'https://agussuhana268-coder.github.io',
+        'Access-Control-Request-Method': 'POST',
+      },
+    });
+    const res = await worker.fetch(req, env);
+    assert(res.status === 204, 'OPTIONS preflight on /api/admin/login returns 204');
+  }
+
+  // Test 29: Admin Login Invalid (Wrong password) returns 401
+  {
+    const req = new Request('https://api.mdzzofficialstore.biz.id/api/admin/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Origin: 'https://agussuhana268-coder.github.io',
+      },
+      body: JSON.stringify({ password: 'wrong-admin-password' }),
+    });
+    const res = await worker.fetch(req, env);
+    assert(res.status === 401, 'Login with wrong password returns 401');
+    const json = await res.json();
+    assert(json.success === false, 'Invalid login response success is false');
+    assert(json.error === 'Unauthorized: Invalid credentials.', 'Invalid login returns generic error');
+  }
+
+  // Test 30: Admin Login Invalid (Empty / missing password) returns 401
+  {
+    const req = new Request('https://api.mdzzofficialstore.biz.id/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: '' }),
+    });
+    const res = await worker.fetch(req, env);
+    assert(res.status === 401, 'Login with empty password returns 401');
+  }
+
+  // Test 31: Admin Login Invalid (Malformed JSON body) returns 401
+  {
+    const req = new Request('https://api.mdzzofficialstore.biz.id/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: 'invalid-non-json-body',
+    });
+    const res = await worker.fetch(req, env);
+    assert(res.status === 401, 'Login with malformed body returns 401');
+  }
+
+  // Test 32: Admin Login Invalid (Unconfigured ADMIN_PASSWORD) returns 401 without leakage
+  {
+    const envNoPass = { DB: env.DB, ADMIN_API_KEY: ADMIN_SECRET };
+    const req = new Request('https://api.mdzzofficialstore.biz.id/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: ADMIN_PASSWORD }),
+    });
+    const res = await worker.fetch(req, envNoPass);
+    assert(res.status === 401, 'Login when ADMIN_PASSWORD is not configured returns 401');
+    const json = await res.json();
+    assert(json.error === 'Unauthorized: Invalid credentials.', 'Unconfigured password returns generic error');
+  }
+
+  // Test 33: Admin Login Invalid: attempting to use ADMIN_API_KEY as password rejected with 401
+  {
+    const req = new Request('https://api.mdzzofficialstore.biz.id/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: ADMIN_SECRET }),
+    });
+    const res = await worker.fetch(req, env);
+    assert(res.status === 401, 'Attempt to login using ADMIN_API_KEY rejected with 401');
+  }
+
+  // Test 34: Admin Login Valid returns 200, stateless session token, and expiresIn 14400
+  let sessionToken = '';
+  {
+    const req = new Request('https://api.mdzzofficialstore.biz.id/api/admin/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Origin: 'https://agussuhana268-coder.github.io',
+      },
+      body: JSON.stringify({ password: ADMIN_PASSWORD }),
+    });
+    const res = await worker.fetch(req, env);
+    assert(res.status === 200, 'Valid admin login returns 200');
+    assert(
+      res.headers.get('Access-Control-Allow-Origin') === 'https://agussuhana268-coder.github.io',
+      'Valid login response has CORS header for GitHub Pages'
+    );
+    const json = await res.json();
+    assert(json.success === true, 'Login response has success: true');
+    assert(typeof json.token === 'string' && json.token.includes('.'), 'Session token is dot-delimited string');
+    assert(json.expiresIn === 14400, 'Session token expiresIn is 14400 (4 hours)');
+    sessionToken = json.token;
+  }
+
+  // Test 35: Admin GET /orders using valid Session Token (Bearer SESSION_TOKEN)
+  {
+    const req = new Request('https://api.mdzzofficialstore.biz.id/api/admin/orders', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+        Origin: 'https://agussuhana268-coder.github.io',
+      },
+    });
+    const res = await worker.fetch(req, env);
+    assert(res.status === 200, 'Admin GET /orders with session token returns 200');
+    const json = await res.json();
+    assert(json.success === true, 'Admin GET /orders with session token success is true');
+    assert(Array.isArray(json.orders), 'Admin GET /orders with session token returns orders array');
+  }
+
+  // Test 36: Session token with invalid signature rejected (401)
+  {
+    const parts = sessionToken.split('.');
+    const tamperedSig = parts[0] + '.' + 'invalidsignaturebytes123';
+    const req = new Request('https://api.mdzzofficialstore.biz.id/api/admin/orders', {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${tamperedSig}` },
+    });
+    const res = await worker.fetch(req, env);
+    assert(res.status === 401, 'Session token with invalid signature rejected with 401');
+  }
+
+  // Test 37: Session token with tampered payload rejected (401)
+  {
+    const parts = sessionToken.split('.');
+    const tamperedPayload = 'eyJyYW5kb20iOiJ0YW1wZXJlZCJ9.' + parts[1];
+    const req = new Request('https://api.mdzzofficialstore.biz.id/api/admin/orders', {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${tamperedPayload}` },
+    });
+    const res = await worker.fetch(req, env);
+    assert(res.status === 401, 'Session token with tampered payload rejected with 401');
+  }
+
+  // Test 38: Session token signed with different secret rejected (401)
+  {
+    const now = Math.floor(Date.now() / 1000);
+    const forgedToken = await createCustomSessionToken(
+      { role: 'admin', iat: now, exp: now + 3600 },
+      'wrong-attacker-secret'
+    );
+    const req = new Request('https://api.mdzzofficialstore.biz.id/api/admin/orders', {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${forgedToken}` },
+    });
+    const res = await worker.fetch(req, env);
+    assert(res.status === 401, 'Session token with wrong secret rejected with 401');
+  }
+
+  // Test 39: Expired session token rejected (401)
+  {
+    const now = Math.floor(Date.now() / 1000);
+    const expiredToken = await createCustomSessionToken(
+      { role: 'admin', iat: now - 7200, exp: now - 3600 },
+      ADMIN_PASSWORD
+    );
+    const req = new Request('https://api.mdzzofficialstore.biz.id/api/admin/orders', {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${expiredToken}` },
+    });
+    const res = await worker.fetch(req, env);
+    assert(res.status === 401, 'Expired session token rejected with 401');
+  }
+
+  // Test 40: Session token with non-admin role rejected (401)
+  {
+    const now = Math.floor(Date.now() / 1000);
+    const nonAdminToken = await createCustomSessionToken(
+      { role: 'guest', iat: now, exp: now + 3600 },
+      ADMIN_PASSWORD
+    );
+    const req = new Request('https://api.mdzzofficialstore.biz.id/api/admin/orders', {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${nonAdminToken}` },
+    });
+    const res = await worker.fetch(req, env);
+    assert(res.status === 401, 'Session token with non-admin role rejected with 401');
+  }
+
+  // Test 41: Complete order using Session Token
+  let sessionTestOrderId = '';
+  {
+    const createReq = new Request('https://api.mdzzofficialstore.biz.id/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        product: { title: 'Session Test Product' },
+        total: '75000',
+        customer_name: 'Session Customer',
+      }),
+    });
+    const createRes = await worker.fetch(createReq, env);
+    const createJson = await createRes.json();
+    sessionTestOrderId = createJson.order.order_id;
+
+    // Transition to WAITING_VERIFICATION
+    await worker.fetch(new Request(`https://api.mdzzofficialstore.biz.id/api/orders/${sessionTestOrderId}/paid`, { method: 'POST' }), env);
+
+    // Complete using Session Token
+    const completeReq = new Request(`https://api.mdzzofficialstore.biz.id/api/admin/orders/${sessionTestOrderId}/complete`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+        Origin: 'https://agussuhana268-coder.github.io',
+      },
+    });
+    const completeRes = await worker.fetch(completeReq, env);
+    assert(completeRes.status === 200, 'Complete order with session token returns 200');
+    const completeJson = await completeRes.json();
+    assert(completeJson.success === true, 'Complete order with session token has success: true');
+    assert(completeJson.order.status === 'SUCCESS', 'Order status completed to SUCCESS');
+  }
+
+  // Test 42: Cancel order using Session Token
+  let sessionCancelOrderId = '';
+  {
+    const createReq = new Request('https://api.mdzzofficialstore.biz.id/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        product: { title: 'Cancel Test Product' },
+        total: '50000',
+        customer_name: 'Cancel Customer',
+      }),
+    });
+    const createRes = await worker.fetch(createReq, env);
+    const createJson = await createRes.json();
+    sessionCancelOrderId = createJson.order.order_id;
+
+    // Transition to WAITING_VERIFICATION
+    await worker.fetch(new Request(`https://api.mdzzofficialstore.biz.id/api/orders/${sessionCancelOrderId}/paid`, { method: 'POST' }), env);
+
+    // Cancel using Session Token
+    const cancelReq = new Request(`https://api.mdzzofficialstore.biz.id/api/admin/orders/${sessionCancelOrderId}/cancel`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+        Origin: 'https://agussuhana268-coder.github.io',
+      },
+    });
+    const cancelRes = await worker.fetch(cancelReq, env);
+    assert(cancelRes.status === 200, 'Cancel order with session token returns 200');
+    const cancelJson = await cancelRes.json();
+    assert(cancelJson.success === true, 'Cancel order with session token has success: true');
+    assert(cancelJson.order.status === 'CANCELLED', 'Order status cancelled to CANCELLED');
+  }
+
+  // Test 43: ADMIN_API_KEY master authentication remains valid (Backward compatibility verified)
+  {
+    const req = new Request('https://api.mdzzofficialstore.biz.id/api/admin/orders', {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${ADMIN_SECRET}` },
+    });
+    const res = await worker.fetch(req, env);
+    assert(res.status === 200, 'Master ADMIN_API_KEY continues to return 200');
+    const json = await res.json();
+    assert(json.success === true, 'Master ADMIN_API_KEY response success is true');
+  }
+
+  // Test 44: Customer API endpoints remain intact and functional
+  {
+    const getReq = new Request(`https://api.mdzzofficialstore.biz.id/api/orders/${sessionTestOrderId}`, {
+      method: 'GET',
+    });
+    const getRes = await worker.fetch(getReq, env);
+    assert(getRes.status === 200, 'Customer GET /api/orders/:orderId returns 200');
+    const getJson = await getRes.json();
+    assert(getJson.order.order_id === sessionTestOrderId, 'Customer order matches requested ID');
+    assert(getJson.order.status === 'SUCCESS', 'Customer order status reflects updated state');
   }
 
   console.log(`\nTests finished: ${passed} passed, ${failed} failed.`);

@@ -4,6 +4,7 @@
  */
 
 const ALLOWED_ORIGIN = 'https://mdzzofficialstore.biz.id';
+const GITHUB_PAGES_ORIGIN = 'https://agussuhana268-coder.github.io';
 
 const ORDER_STATUS = {
   PENDING_PAYMENT: 'PENDING_PAYMENT',
@@ -31,10 +32,11 @@ function getCorsHeaders(request) {
   const origin = request.headers.get('Origin');
   let allowOrigin = ALLOWED_ORIGIN;
 
-  // Allow production domain and local development origins
+  // Allow production domain, GitHub Pages admin, and local development origins
   if (
     origin &&
     (origin === ALLOWED_ORIGIN ||
+      origin === GITHUB_PAGES_ORIGIN ||
       origin.endsWith('.mdzzofficialstore.biz.id') ||
       origin.startsWith('http://localhost:') ||
       origin.startsWith('http://127.0.0.1:'))
@@ -117,18 +119,130 @@ function timingSafeCompare(a, b) {
 }
 
 /**
- * Helper to verify Admin API Key from Authorization header
+ * Helper to encode Uint8Array buffer to Base64URL string (RFC 4648)
  */
-function verifyAdminAuth(request, env) {
-  const adminApiKey = env && env.ADMIN_API_KEY;
-  if (!adminApiKey || typeof adminApiKey !== 'string' || adminApiKey.trim() === '') {
-    return {
-      ok: false,
-      status: 401,
-      error: 'Unauthorized: Admin authentication secret is not configured.',
-    };
+function base64UrlEncode(buffer) {
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary)
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+}
+
+/**
+ * Helper to decode Base64URL string to Uint8Array
+ */
+function base64UrlDecode(base64Url) {
+  let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  while (base64.length % 4 !== 0) {
+    base64 += '=';
+  }
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
+}
+
+/**
+ * Sign session token payload using HMAC-SHA256 and Web Crypto API
+ */
+async function signSessionToken(payload, secret) {
+  const encoder = new TextEncoder();
+  const payloadStr = JSON.stringify(payload);
+  const encodedPayload = base64UrlEncode(encoder.encode(payloadStr));
+
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+
+  const signatureBuffer = await crypto.subtle.sign(
+    'HMAC',
+    key,
+    encoder.encode(encodedPayload)
+  );
+
+  const encodedSig = base64UrlEncode(signatureBuffer);
+  return `${encodedPayload}.${encodedSig}`;
+}
+
+/**
+ * Verify HMAC-SHA256 session token signature, structure, and expiry
+ */
+async function verifySessionToken(token, secret) {
+  if (typeof token !== 'string' || !token.includes('.')) {
+    return { ok: false, error: 'Invalid token format.' };
   }
 
+  const parts = token.split('.');
+  if (parts.length !== 2) {
+    return { ok: false, error: 'Invalid token format.' };
+  }
+
+  const [encodedPayload, encodedSig] = parts;
+
+  let key;
+  try {
+    const encoder = new TextEncoder();
+    key = await crypto.subtle.importKey(
+      'raw',
+      encoder.encode(secret),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['verify']
+    );
+
+    const sigBytes = base64UrlDecode(encodedSig);
+    const isValid = await crypto.subtle.verify(
+      'HMAC',
+      key,
+      sigBytes,
+      encoder.encode(encodedPayload)
+    );
+
+    if (!isValid) {
+      return { ok: false, error: 'Invalid token signature.' };
+    }
+  } catch {
+    return { ok: false, error: 'Cryptographic signature verification failed.' };
+  }
+
+  try {
+    const decoder = new TextDecoder();
+    const payloadJson = decoder.decode(base64UrlDecode(encodedPayload));
+    const payload = JSON.parse(payloadJson);
+    const now = Math.floor(Date.now() / 1000);
+
+    if (!payload.exp || typeof payload.exp !== 'number' || payload.exp < now) {
+      return { ok: false, error: 'Session token has expired.' };
+    }
+
+    if (payload.role !== 'admin') {
+      return { ok: false, error: 'Invalid session role.' };
+    }
+
+    return { ok: true, payload };
+  } catch {
+    return { ok: false, error: 'Malformed session payload.' };
+  }
+}
+
+/**
+ * Helper to verify Admin authentication
+ * Supports two modes:
+ * Mode A: Bearer ADMIN_API_KEY (Master key for CLI / automated backend)
+ * Mode B: Bearer SESSION_TOKEN (HMAC-SHA256 signed session token for web dashboard)
+ */
+async function verifyAdminAuth(request, env) {
   const authHeader = request.headers.get('Authorization') || request.headers.get('authorization');
   if (!authHeader) {
     return {
@@ -143,20 +257,35 @@ function verifyAdminAuth(request, env) {
     return {
       ok: false,
       status: 401,
-      error: 'Unauthorized: Invalid Authorization format. Expected "Bearer <ADMIN_API_KEY>".',
+      error: 'Unauthorized: Invalid Authorization format. Expected "Bearer <TOKEN>".',
     };
   }
 
-  const providedKey = match[1].trim();
-  if (!timingSafeCompare(providedKey, adminApiKey.trim())) {
-    return {
-      ok: false,
-      status: 401,
-      error: 'Unauthorized: Invalid credentials.',
-    };
+  const providedToken = match[1].trim();
+
+  // Mode A: Master ADMIN_API_KEY verification
+  const adminApiKey = env && env.ADMIN_API_KEY;
+  if (adminApiKey && typeof adminApiKey === 'string' && adminApiKey.trim() !== '') {
+    if (timingSafeCompare(providedToken, adminApiKey.trim())) {
+      return { ok: true, mode: 'api_key' };
+    }
   }
 
-  return { ok: true };
+  // Mode B: Ephemeral Session Token verification
+  const signingSecret = env && (env.SESSION_SECRET || env.ADMIN_PASSWORD);
+  if (signingSecret && typeof signingSecret === 'string' && signingSecret.trim() !== '') {
+    const sessionRes = await verifySessionToken(providedToken, signingSecret.trim());
+    if (sessionRes.ok) {
+      return { ok: true, mode: 'session_token', payload: sessionRes.payload };
+    }
+  }
+
+  // Generic 401 response without leaking internal configuration state
+  return {
+    ok: false,
+    status: 401,
+    error: 'Unauthorized: Invalid credentials.',
+  };
 }
 
 /**
@@ -191,9 +320,9 @@ export default {
         );
       }
 
-      // 3. Admin Authentication Guard for all /api/admin/* endpoints
-      if (pathname.startsWith('/api/admin')) {
-        const auth = verifyAdminAuth(request, env);
+      // 3. Admin Authentication Guard for all /api/admin/* endpoints EXCEPT /api/admin/login
+      if (pathname.startsWith('/api/admin') && pathname !== '/api/admin/login') {
+        const auth = await verifyAdminAuth(request, env);
         if (!auth.ok) {
           return jsonResponse(
             {
@@ -207,6 +336,59 @@ export default {
       }
 
       // 4. Admin API Endpoints
+      // 4.0. POST /api/admin/login -> Authenticate admin and return ephemeral HMAC session token
+      if (method === 'POST' && pathname === '/api/admin/login') {
+        let body;
+        try {
+          body = await request.json();
+        } catch {
+          return jsonResponse(
+            { success: false, error: 'Unauthorized: Invalid credentials.' },
+            401,
+            request
+          );
+        }
+
+        const providedPassword = (body && typeof body.password === 'string') ? body.password.trim() : '';
+        const adminPassword = (env && typeof env.ADMIN_PASSWORD === 'string') ? env.ADMIN_PASSWORD.trim() : '';
+
+        // JANGAN gunakan ADMIN_API_KEY sebagai password dashboard.
+        // Validasi HANYA terhadap ADMIN_PASSWORD.
+        if (
+          !adminPassword ||
+          !providedPassword ||
+          !timingSafeCompare(providedPassword, adminPassword)
+        ) {
+          return jsonResponse(
+            { success: false, error: 'Unauthorized: Invalid credentials.' },
+            401,
+            request
+          );
+        }
+
+        const expiresIn = 14400; // 4 hours in seconds
+        const now = Math.floor(Date.now() / 1000);
+        const payload = {
+          role: 'admin',
+          iat: now,
+          exp: now + expiresIn,
+          jti: (typeof crypto.randomUUID === 'function') ? crypto.randomUUID() : Math.random().toString(36).slice(2),
+        };
+
+        const signingSecret = (env && env.SESSION_SECRET) || adminPassword;
+        const sessionToken = await signSessionToken(payload, signingSecret);
+
+        return jsonResponse(
+          {
+            success: true,
+            token: sessionToken,
+            expiresIn,
+          },
+          200,
+          request
+        );
+      }
+
       // 4.1. GET /api/admin/orders -> List orders (supports optional ?status= filter)
       if (method === 'GET' && pathname === '/api/admin/orders') {
         if (!env.DB) {
