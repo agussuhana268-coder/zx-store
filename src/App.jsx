@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import AboutCompany from './components/AboutCompany';
 import ProductCard from './components/ProductCard';
 import OrderModal from './components/OrderModal';
+import QrisPaymentModal from './components/QrisPaymentModal';
 import WhyChooseZX from './components/WhyChooseZX';
 import HowItWorks from './components/HowItWorks';
 import AboutSupport from './components/AboutSupport';
@@ -13,6 +14,7 @@ import { products, isPromotionActive } from './data/products';
 
 export default function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [qrisOrder, setQrisOrder] = useState(null);
   const [isPromo, setIsPromo] = useState(isPromotionActive);
 
   useEffect(() => {
@@ -107,6 +109,21 @@ export default function App() {
           product={selectedProduct}
           isPromo={isPromo}
           onCloseModal={closeOrderModal}
+          onProceedToQris={(orderData) => {
+            setSelectedProduct(null);
+            setQrisOrder(orderData);
+          }}
+        />
+      )}
+
+      {qrisOrder && (
+        <QrisPaymentModal
+          order={qrisOrder}
+          onClose={() => setQrisOrder(null)}
+          onBack={() => {
+            setSelectedProduct(qrisOrder.product);
+            setQrisOrder(null);
+          }}
         />
       )}
     </div>

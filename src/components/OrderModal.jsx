@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { X, Send, ShieldCheck, Smartphone } from 'lucide-react';
+import { X, Send, ShieldCheck, Smartphone, QrCode, MessageCircle, ArrowRight } from 'lucide-react';
+import { generateOrderId } from '../utils/order';
 
-export default function OrderModal({ product, onCloseModal, isPromo }) {
+export default function OrderModal({ product, onCloseModal, isPromo, onProceedToQris }) {
   const [customerName, setCustomerName] = useState('');
   const [customerContact, setCustomerContact] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('qris'); // 'qris' | 'whatsapp'
   const [errors, setErrors] = useState({ name: '', contact: '' });
 
   useEffect(() => {
@@ -62,6 +64,20 @@ export default function OrderModal({ product, onCloseModal, isPromo }) {
 
     const normalizedPhone = normalizePhone(contactTrimmed);
 
+    // If QRIS payment method is selected
+    if (paymentMethod === 'qris' && onProceedToQris) {
+      const newOrderId = generateOrderId();
+      onProceedToQris({
+        orderId: newOrderId,
+        product,
+        totalPrice: effectivePrice,
+        customerName: nameTrimmed,
+        customerContact: normalizedPhone,
+      });
+      return;
+    }
+
+    // Existing WhatsApp Order flow (100% preserved)
     const messageLines = [
       `Halo Admin Zet Xiters, saya ingin melakukan pemesanan lisensi resmi:`,
       `📦 *${product.name}*`,
@@ -90,7 +106,9 @@ export default function OrderModal({ product, onCloseModal, isPromo }) {
         <div className="dialog-header">
           <div>
             <h3 className="dialog-title">Formulir Pemesanan Lisensi</h3>
-            <p className="dialog-subtitle">Pesanan Anda akan langsung diteruskan ke WhatsApp Admin resmi.</p>
+            <p className="dialog-subtitle">
+              Pilih metode transaksi dan lengkapi data kontak Anda.
+            </p>
           </div>
           <button
             type="button"
@@ -132,6 +150,46 @@ export default function OrderModal({ product, onCloseModal, isPromo }) {
         </div>
 
         <form onSubmit={handleOrderSubmit} noValidate className="dialog-form">
+          {/* Payment Method Selector */}
+          <div className="payment-select-group">
+            <label className="input-label">Pilih Metode Transaksi</label>
+            <div className="payment-method-grid">
+              <button
+                type="button"
+                className={`payment-method-card ${paymentMethod === 'qris' ? 'active' : ''}`}
+                onClick={() => setPaymentMethod('qris')}
+              >
+                <div className="method-card-head">
+                  <div className="method-icon-wrap">
+                    <QrCode size={16} />
+                  </div>
+                  <span className="method-pill-badge">Rekomendasi</span>
+                </div>
+                <div className="method-info">
+                  <span className="method-title">QRIS DANA (Semua E-Wallet)</span>
+                  <span className="method-sub">Scan QR DANA, GoPay, OVO, ShopeePay, BCA, dll</span>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                className={`payment-method-card ${paymentMethod === 'whatsapp' ? 'active' : ''}`}
+                onClick={() => setPaymentMethod('whatsapp')}
+              >
+                <div className="method-card-head">
+                  <div className="method-icon-wrap">
+                    <MessageCircle size={16} />
+                  </div>
+                  <span className="method-pill-badge manual">Manual CS</span>
+                </div>
+                <div className="method-info">
+                  <span className="method-title">WhatsApp Admin Langsung</span>
+                  <span className="method-sub">Pesan & konsultasi manual via chat WhatsApp</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
           <div className="input-group">
             <label className="input-label" htmlFor="customer-name">
               Nama Lengkap
@@ -170,14 +228,25 @@ export default function OrderModal({ product, onCloseModal, isPromo }) {
 
           <div className="dialog-security-note">
             <ShieldCheck size={14} className="note-icon" />
-            <span>Transaksi aman langsung dengan Admin WhatsApp resmi (087833947151).</span>
+            <span>
+              {paymentMethod === 'qris'
+                ? 'Transaksi diproses melalui sistem QRIS DANA ZetXiters Official.'
+                : 'Transaksi aman langsung dengan Admin WhatsApp resmi (087833947151).'}
+            </span>
           </div>
 
           <div className="dialog-actions">
-            <button type="submit" className="btn-dialog-submit">
-              <span>Lanjutkan ke WhatsApp</span>
-              <Send size={15} />
-            </button>
+            {paymentMethod === 'qris' ? (
+              <button type="submit" className="btn-dialog-submit">
+                <span>Lanjut ke Pembayaran QRIS</span>
+                <ArrowRight size={15} />
+              </button>
+            ) : (
+              <button type="submit" className="btn-dialog-submit">
+                <span>Lanjutkan ke WhatsApp</span>
+                <Send size={15} />
+              </button>
+            )}
           </div>
         </form>
       </div>

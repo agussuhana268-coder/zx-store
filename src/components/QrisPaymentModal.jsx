@@ -1,0 +1,316 @@
+import { useState, useEffect } from 'react';
+import {
+  X,
+  Check,
+  Copy,
+  Clock,
+  MessageCircle,
+  ShieldCheck,
+  Download,
+  ArrowLeft,
+  Info,
+  CheckCircle2,
+  Smartphone
+} from 'lucide-react';
+import { ADMIN_WHATSAPP_NUMBER, buildQrisConfirmationMessage, getWhatsAppUrl } from '../utils/order';
+
+export default function QrisPaymentModal({ order, onClose, onBack }) {
+  const [isPaidSubmitted, setIsPaidSubmitted] = useState(false);
+  const [copiedField, setCopiedField] = useState(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  if (!order) return null;
+
+  const {
+    orderId,
+    product,
+    totalPrice,
+    customerName = '',
+    customerContact = '',
+  } = order;
+
+  const qrisImageUrl = `${import.meta.env.BASE_URL}images/qris-dana.png`;
+
+  const copyToClipboard = (text, fieldName) => {
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(text);
+      setCopiedField(fieldName);
+      setTimeout(() => {
+        setCopiedField(null);
+      }, 2000);
+    }
+  };
+
+  const handleOpenWhatsApp = () => {
+    const message = buildQrisConfirmationMessage({
+      orderId,
+      productName: product?.name || 'Lisensi ZetXiters',
+      totalPrice,
+      customerName,
+      customerContact,
+    });
+    const waUrl = getWhatsAppUrl(ADMIN_WHATSAPP_NUMBER, message);
+    window.open(waUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  return (
+    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+      <div
+        className="modal-dialog qris-modal-dialog"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="dialog-header qris-dialog-header">
+          <div className="qris-header-left">
+            {onBack && !isPaidSubmitted && (
+              <button
+                type="button"
+                className="qris-back-btn"
+                onClick={onBack}
+                aria-label="Kembali ke formulir"
+                title="Kembali ke data pemesan"
+              >
+                <ArrowLeft size={16} />
+              </button>
+            )}
+            <div>
+              <div className="qris-modal-badge">
+                <span>METODE PEMBAYARAN QRIS MANUAL</span>
+              </div>
+              <h3 className="dialog-title">Pembayaran QRIS DANA</h3>
+              <p className="dialog-subtitle">
+                Scan kode QRIS menggunakan aplikasi DANA atau e-wallet / mobile banking lainnya.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="dialog-close-btn"
+            onClick={onClose}
+            aria-label="Tutup pembayaran"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Order Details Summary Card */}
+        <div className="qris-order-summary">
+          <div className="qris-order-row">
+            <div className="qris-order-meta">
+              <span className="qris-label">Nomor / Order ID:</span>
+              <div className="qris-order-id-wrap">
+                <span className="qris-order-id-val">{orderId}</span>
+                <button
+                  type="button"
+                  className="qris-copy-btn"
+                  onClick={() => copyToClipboard(orderId, 'orderId')}
+                  title="Salin Order ID"
+                >
+                  {copiedField === 'orderId' ? (
+                    <>
+                      <Check size={12} className="copy-check" />
+                      <span>Tersalin</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={12} />
+                      <span>Salin</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="qris-order-price-box">
+              <span className="qris-label">Total Pembayaran:</span>
+              <div className="qris-total-wrap">
+                <span className="qris-total-val">{totalPrice}</span>
+                <button
+                  type="button"
+                  className="qris-copy-btn"
+                  onClick={() => copyToClipboard(totalPrice.replace(/\D/g, ''), 'price')}
+                  title="Salin nominal transfer"
+                >
+                  {copiedField === 'price' ? (
+                    <>
+                      <Check size={12} className="copy-check" />
+                      <span>Tersalin</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={12} />
+                      <span>Nominal</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="qris-product-subline">
+            <span className="qris-product-name">{product?.name}</span>
+            <div className="qris-product-tags">
+              <span className="summary-license-pill">
+                <ShieldCheck size={12} />
+                <span>{product?.license || 'Permanen / Lifetime'}</span>
+              </span>
+              {product?.compatibility && (
+                <span className="summary-compat-pill">
+                  <Smartphone size={12} />
+                  <span>{product.compatibility}</span>
+                </span>
+              )}
+            </div>
+          </div>
+
+          {customerName && (
+            <div className="qris-customer-line">
+              <span>Pemesan: <strong>{customerName}</strong> {customerContact ? `(${customerContact})` : ''}</span>
+            </div>
+          )}
+        </div>
+
+        {/* QRIS DANA Card (1:1 Aspect Ratio) */}
+        <div className="qris-code-card">
+          <div className="qris-code-header">
+            <div className="qris-brand-left">
+              <span className="qris-logo-text">QRIS</span>
+              <span className="qris-sub-text">National Standard</span>
+            </div>
+            <div className="qris-dana-badge">
+              <span className="dana-dot"></span>
+              <span>DANA QR</span>
+            </div>
+          </div>
+
+          {/* 1:1 Aspect Ratio Container */}
+          <div className="qris-image-container-square">
+            <img
+              src={qrisImageUrl}
+              alt="Kode QRIS DANA Pembayaran ZetXiters"
+              className="qris-image-proportional"
+              loading="eager"
+            />
+          </div>
+
+          <div className="qris-code-footer">
+            <span className="qris-merchant-title">ZETXITERS OFFICIAL STORE</span>
+            <p className="qris-accepted-note">
+              Menerima: DANA • GoPay • OVO • ShopeePay • BCA Mobile • Mandiri Livin • BRImo • Semua QRIS
+            </p>
+            <a
+              href={qrisImageUrl}
+              download="qris-dana-zxstore.png"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="qris-download-link"
+            >
+              <Download size={13} />
+              <span>Simpan Gambar QRIS (Untuk Scan dari Galeri)</span>
+            </a>
+          </div>
+        </div>
+
+        {/* Short Payment Instructions */}
+        <div className="qris-instructions-card">
+          <div className="instructions-header">
+            <Info size={14} className="instructions-icon" />
+            <span className="instructions-title">Instruksi Pembayaran:</span>
+          </div>
+          <ol className="instructions-step-list">
+            <li>
+              Buka aplikasi <strong>DANA</strong>, <strong>GoPay</strong>, <strong>OVO</strong>, <strong>ShopeePay</strong>, atau <strong>Mobile Banking</strong> pilihan Anda.
+            </li>
+            <li>
+              Pilih menu <strong>Scan QR / Bayar</strong> dan arahkan kamera ke kode QRIS di atas (atau unggah dari galeri jika menggunakan 1 HP).
+            </li>
+            <li>
+              Pastikan nama merchant penerima dan nominal transfer tepat sebesar <strong>{totalPrice}</strong>.
+            </li>
+            <li>
+              Selesaikan transaksi hingga pembayaran berhasil di aplikasi Anda.
+            </li>
+            <li>
+              Kembali ke halaman ini lalu tekan tombol <strong>"Saya Sudah Membayar"</strong> di bawah.
+            </li>
+          </ol>
+        </div>
+
+        {/* Dynamic Section: Before vs After clicking "Saya Sudah Membayar" */}
+        {!isPaidSubmitted ? (
+          <div className="qris-action-section">
+            <button
+              type="button"
+              className="btn-dialog-submit qris-btn-paid"
+              onClick={() => setIsPaidSubmitted(true)}
+            >
+              <CheckCircle2 size={17} />
+              <span>Saya Sudah Membayar</span>
+            </button>
+
+            <div className="qris-security-disclaimer">
+              <ShieldCheck size={14} className="disclaimer-icon" />
+              <span>
+                Simpan tangkapan layar (screenshot) bukti transaksi dari aplikasi Anda untuk kemudahan verifikasi.
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="qris-post-submit-section">
+            {/* Status Box Required by Requirement 7 & 10 */}
+            <div className="qris-status-box status-pending-verification">
+              <div className="status-badge-row">
+                <Clock size={16} className="status-icon-pending" />
+                <span className="status-badge-label">STATUS TRANSAKSI</span>
+              </div>
+              <h4 className="status-highlight-text">
+                Pembayaran dikirim — menunggu verifikasi admin.
+              </h4>
+              <p className="status-details-text">
+                Sistem pembayaran saat ini belum terhubung otomatis ke API DANA. Admin ZetXiters akan memverifikasi mutasi pembayaran Anda secara manual.
+              </p>
+              <div className="status-order-reminder">
+                <span>Order ID: <strong>{orderId}</strong> • Total: <strong>{totalPrice}</strong></span>
+              </div>
+            </div>
+
+            {/* WhatsApp Confirmation Button Required by Requirement 8 & 9 */}
+            <div className="qris-confirm-actions">
+              <button
+                type="button"
+                className="btn-whatsapp-confirm"
+                onClick={handleOpenWhatsApp}
+              >
+                <MessageCircle size={18} />
+                <span>Konfirmasi via WhatsApp</span>
+              </button>
+
+              <button
+                type="button"
+                className="qris-btn-close-secondary"
+                onClick={onClose}
+              >
+                <span>Tutup Jendela Pembayaran</span>
+              </button>
+            </div>
+
+            <div className="qris-wa-instruction-note">
+              <span>
+                💡 Klik tombol di atas untuk membuka WhatsApp Admin dengan pesan Order ID otomatis, lalu kirimkan bukti transfer screenshot Anda.
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

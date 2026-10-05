@@ -1336,3 +1336,644 @@ a {
 .btn-dialog-submit:hover {
   background: var(--accent-blue-hover);
 }
+
+/* ==========================================================================
+   PAYMENT METHOD SELECTOR
+   ========================================================================== */
+.payment-select-group {
+  margin-bottom: 16px;
+}
+
+.payment-method-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.payment-method-card {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  text-align: left;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.payment-method-card:hover {
+  background: var(--bg-surface-elevated);
+  border-color: var(--border-medium);
+}
+
+.payment-method-card.active {
+  background: rgba(56, 139, 253, 0.08);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 1px var(--accent-blue);
+}
+
+.method-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.method-icon-wrap {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-blue);
+}
+
+.payment-method-card.active .method-icon-wrap {
+  background: var(--accent-blue);
+  color: #FFFFFF;
+}
+
+.method-pill-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(56, 139, 253, 0.2);
+  color: #79B8FF;
+  border: 1px solid rgba(56, 139, 253, 0.3);
+}
+
+.method-pill-badge.manual {
+  background: rgba(139, 148, 158, 0.15);
+  color: var(--text-muted);
+  border-color: var(--border-subtle);
+}
+
+.method-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.method-sub {
+  display: block;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+/* ==========================================================================
+   QRIS PAYMENT MODAL
+   ========================================================================== */
+.qris-modal-dialog {
+  max-width: 500px;
+  max-height: 92vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-medium) transparent;
+}
+
+.qris-modal-dialog::-webkit-scrollbar {
+  width: 6px;
+}
+
+.qris-modal-dialog::-webkit-scrollbar-thumb {
+  background-color: var(--border-medium);
+  border-radius: 4px;
+}
+
+.qris-dialog-header {
+  margin-bottom: 14px;
+}
+
+.qris-header-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.qris-back-btn {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.qris-back-btn:hover {
+  background: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+
+.qris-modal-badge {
+  display: inline-block;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: var(--accent-blue);
+  background: var(--accent-blue-subtle);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+/* Order Summary inside QRIS */
+.qris-order-summary {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.qris-order-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 10px;
+}
+
+.qris-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.qris-order-id-wrap,
+.qris-total-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qris-order-id-val {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: #79B8FF;
+  letter-spacing: 0.5px;
+}
+
+.qris-total-val {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 800;
+  color: #2EA043;
+}
+
+.qris-copy-btn {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.qris-copy-btn:hover {
+  background: var(--bg-surface-hover);
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+
+.copy-check {
+  color: #2EA043;
+}
+
+.qris-product-subline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.qris-product-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.qris-product-tags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qris-customer-line {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-subtle);
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+
+.qris-customer-line strong {
+  color: var(--text-primary);
+}
+
+/* QR Code Card (1:1 Aspect Ratio) */
+.qris-code-card {
+  background: #FFFFFF;
+  border-radius: var(--radius-md);
+  padding: 16px 16px 14px;
+  margin-bottom: 16px;
+  color: #0F172A;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  border: 2px solid #0086E0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qris-code-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.qris-brand-left {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.qris-logo-text {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  color: #CC0000;
+}
+
+.qris-sub-text {
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748B;
+  text-transform: uppercase;
+}
+
+.qris-dana-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #118EEA;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.dana-dot {
+  width: 6px;
+  height: 6px;
+  background: #FFFFFF;
+  border-radius: 50%;
+}
+
+.qris-image-container-square {
+  width: 100%;
+  max-width: 250px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  padding: 4px;
+}
+
+.qris-image-proportional {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  display: block;
+}
+
+.qris-code-footer {
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed #CBD5E1;
+}
+
+.qris-merchant-title {
+  display: block;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: #1E293B;
+  margin-bottom: 2px;
+}
+
+.qris-accepted-note {
+  font-size: 10px;
+  color: #64748B;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.qris-download-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0284C7;
+  padding: 5px 12px;
+  background: #F0F9FF;
+  border: 1px solid #BAE6FD;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+
+.qris-download-link:hover {
+  background: #E0F2FE;
+  color: #0369A1;
+}
+
+/* Instructions Card */
+.qris-instructions-card {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+
+.instructions-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  color: var(--accent-blue);
+}
+
+.instructions-icon {
+  flex-shrink: 0;
+}
+
+.instructions-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.instructions-step-list {
+  padding-left: 20px;
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.instructions-step-list li {
+  margin-bottom: 5px;
+}
+
+.instructions-step-list li strong {
+  color: var(--text-primary);
+}
+
+/* Action Section Before Click */
+.qris-action-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.qris-btn-paid {
+  background: #238636;
+}
+
+.qris-btn-paid:hover {
+  background: #2EA043;
+}
+
+.qris-security-disclaimer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  padding: 4px 6px;
+}
+
+.disclaimer-icon {
+  color: var(--accent-gold);
+  flex-shrink: 0;
+}
+
+/* Status Box & Post-Submit Section */
+.qris-post-submit-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.qris-status-box {
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+
+.status-pending-verification {
+  background: rgba(210, 153, 34, 0.1);
+  border: 1px solid rgba(210, 153, 34, 0.35);
+}
+
+.status-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  color: var(--accent-gold);
+}
+
+.status-icon-pending {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.95); }
+}
+
+.status-badge-label {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.status-highlight-text {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 800;
+  color: #E3B341;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.status-details-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.status-order-reminder {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.25);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+}
+
+.status-order-reminder strong {
+  color: var(--text-primary);
+}
+
+/* WhatsApp Confirmation Button */
+.btn-whatsapp-confirm {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #25D366;
+  color: #0B2B16;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 800;
+  padding: 13px 20px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25);
+  transition: all 0.15s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-whatsapp-confirm:hover {
+  background: #20BD5A;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(37, 211, 102, 0.35);
+}
+
+.qris-btn-close-secondary {
+  width: 100%;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.qris-btn-close-secondary:hover {
+  background: var(--bg-surface-hover);
+  color: var(--text-primary);
+}
+
+.qris-confirm-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.qris-wa-instruction-note {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.4;
+  padding: 0 4px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+  .modal-backdrop {
+    padding: 12px;
+  }
+
+  .modal-dialog {
+    padding: 20px 16px;
+  }
+
+  .qris-order-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .qris-order-price-box {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .qris-image-container-square {
+    max-width: 210px;
+  }
+
+  .status-highlight-text {
+    font-size: 14px;
+  }
+}
