@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   X,
   Check,
@@ -20,6 +20,7 @@ import {
   getWhatsAppUrl
 } from '../utils/order';
 import { markOrderPaid, getOrder } from '../utils/api';
+import { playSuccessSound } from '../utils/sound';
 
 export default function QrisPaymentModal({
   order,
@@ -34,6 +35,33 @@ export default function QrisPaymentModal({
 
   const orderId = order?.orderId || order?.order_id;
   const currentStatus = order?.status || ORDER_STATUS.PENDING_PAYMENT;
+
+  // Track status transitions to play success sound strictly on WAITING_VERIFICATION -> SUCCESS
+  const prevStatusRef = useRef(currentStatus);
+  const prevOrderIdRef = useRef(orderId);
+  const hasPlayedSuccessSoundRef = useRef(false);
+
+  useEffect(() => {
+    // Reset tracker if orderId changes
+    if (prevOrderIdRef.current !== orderId) {
+      prevOrderIdRef.current = orderId;
+      hasPlayedSuccessSoundRef.current = false;
+    }
+
+    const prevStatus = prevStatusRef.current;
+
+    // Detect genuine transition from WAITING_VERIFICATION to SUCCESS
+    if (
+      prevStatus === ORDER_STATUS.WAITING_VERIFICATION &&
+      currentStatus === ORDER_STATUS.SUCCESS &&
+      !hasPlayedSuccessSoundRef.current
+    ) {
+      hasPlayedSuccessSoundRef.current = true;
+      playSuccessSound();
+    }
+
+    prevStatusRef.current = currentStatus;
+  }, [currentStatus, orderId]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
