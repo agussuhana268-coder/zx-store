@@ -41,8 +41,9 @@ export default function OrderModal({ product, onCloseModal, isPromo: _isPromo, o
   if (!product) return null;
 
   const activePrice = activeDuration ? activeDuration.price : product.price;
+  const isLifetimeDuration = /permanen|lifetime/i.test(activeDuration?.label || '');
   const activeLicense = activeDuration
-    ? (activeDuration.label.toLowerCase().includes('permanen')
+    ? (isLifetimeDuration
         ? (product.license || 'Permanen / Lifetime')
         : `Durasi ${activeDuration.label}`)
     : (product.license || 'Permanen / Lifetime');
