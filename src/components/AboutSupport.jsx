@@ -41,13 +41,13 @@ export default function AboutSupport() {
               <span>Saluran Resmi WhatsApp</span>
             </a>
             <a
-              href="https://wa.me/6287833947151?text=Halo%20Admin%20ZetXiters,%20saya%20ingin%20konsultasi%20layanan"
+              href="https://wa.me/6285196039168?text=Halo%20Admin%20ZetXiters,%20saya%20ingin%20konsultasi%20layanan"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-contact-solid"
             >
               <Headset size={15} />
-              <span>Chat CS (087833947151)</span>
+              <span>Chat CS (085196039168)</span>
             </a>
           </div>
         </div>
