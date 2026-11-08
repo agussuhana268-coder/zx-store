@@ -49,6 +49,17 @@ function runProductTests() {
   testAssert(nexus5?.price === 'Rp20.000', 'NEXUS 5 Hari is Rp20.000');
   testAssert(nexus13?.price === 'Rp30.000', 'NEXUS 13 Hari is Rp30.000');
   testAssert(nexusLifetime?.price === 'Rp85.000', 'NEXUS Lifetime is Rp85.000');
+  const newNexusFeatures = [
+    'Texture Settings (Grafik Minecraft)',
+    'Nexus Space',
+    'Nexus XIT Panel',
+  ];
+  testAssert(
+    newNexusFeatures.every((name, index) =>
+      nexus.features[index]?.name === name && nexus.features[index]?.isNew === true
+    ),
+    'NEXUS new features appear first and are marked NEW'
+  );
 
   // 5. VORTEX durations & prices
   testAssert(Array.isArray(vortex.durations) && vortex.durations.length === 3, 'VORTEX has 3 duration options');
