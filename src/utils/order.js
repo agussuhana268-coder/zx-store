@@ -2,7 +2,7 @@
  * Utility functions for Order & QRIS Payment processing
  */
 
-export const ADMIN_WHATSAPP_NUMBER = '6287833947151';
+export const ADMIN_WHATSAPP_NUMBER = '6285196039168';
 
 /**
  * Standard Order Statuses
