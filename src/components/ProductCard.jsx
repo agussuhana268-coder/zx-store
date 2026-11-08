@@ -36,8 +36,9 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
   const activePromoPrice = selectedDuration?.promoPrice || null;
   const hasActivePromo = Boolean(isPromo && activePromoPrice);
   const savings = hasActivePromo ? calculateSavings(activePrice, activePromoPrice) : null;
+  const isLifetimeDuration = /permanen|lifetime/i.test(selectedDuration?.label || '');
   const activeLicense = selectedDuration
-    ? (selectedDuration.label.toLowerCase().includes('permanen')
+    ? (isLifetimeDuration
         ? (product.license || 'Lisensi Permanen / Sekali Bayar')
         : `Lisensi Aktif ${selectedDuration.label}`)
     : (product.license || 'Lisensi Permanen / Sekali Bayar');
@@ -48,7 +49,7 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
       selectedDuration,
       price: activePrice,
       promoPrice: activePromoPrice,
-      license: selectedDuration?.label.toLowerCase().includes('permanen')
+      license: isLifetimeDuration
         ? (product.license || 'PERMANEN / LIFETIME')
         : `DURASI ${selectedDuration ? selectedDuration.label.toUpperCase() : ''}`,
     });
@@ -158,7 +159,8 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
             {initialFeatures.map((feat, i) => (
               <li key={i} className="feature-line">
                 <Check size={15} className="feature-check-icon" />
-                <span>{feat}</span>
+                <span>{typeof feat === 'string' ? feat : feat.name}</span>
+                {typeof feat !== 'string' && feat.isNew && <span className="feature-new-badge">NEW</span>}
               </li>
             ))}
           </ul>
@@ -170,7 +172,8 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
                   {extraFeatures.map((feat, i) => (
                     <li key={i + initialCount} className="feature-line">
                       <Check size={15} className="feature-check-icon" />
-                      <span>{feat}</span>
+                      <span>{typeof feat === 'string' ? feat : feat.name}</span>
+                      {typeof feat !== 'string' && feat.isNew && <span className="feature-new-badge">NEW</span>}
                     </li>
                   ))}
                 </ul>
