@@ -59,6 +59,7 @@ export const NEXUS_INFO = {
 export const products = [
   {
     id: 'nexus-injector',
+    videoPreviewId: 'JDNKyn_BLWQ',
     name: 'NEXUS INJECTOR',
     version: 'v2.0',
     platform: 'Android',
@@ -98,6 +99,7 @@ export const products = [
   },
   {
     id: 'zx-vortex',
+    videoPreviewId: 'j54yymyRbpQ',
     name: 'ZX VORTEX',
     version: 'v3.5',
     platform: 'Android',
@@ -142,13 +144,14 @@ export const products = [
   },
   {
     id: 'insanity-max',
+    availability: 'coming-soon',
     name: 'INSANITY MAX',
     version: 'v1.0',
     platform: 'iOS / iPhone',
     price: 'Rp250.000',
     promoPrice: null,
-    slots: 'Tersedia • Instant Delivery',
-    badge: 'iOS EXCLUSIVE',
+    slots: 'BELUM TERSEDIA • COMING SOON',
+    badge: 'COMING SOON',
     license: 'PERMANEN / LIFETIME',
     compatibility: 'iOS 15 - iOS 27',
     durations: [

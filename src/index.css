@@ -2223,3 +2223,72 @@ a {
   letter-spacing: 0.5px;
   line-height: 1.3;
 }
+
+
+/* YouTube previews and unavailable catalog products */
+.product-video-preview {
+  margin: 0 0 16px;
+}
+.btn-video-preview {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(248, 68, 68, 0.35);
+  border-radius: var(--radius-md);
+  background: rgba(248, 68, 68, 0.1);
+  color: #ff8585;
+  font-size: 12.5px;
+  font-weight: 700;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.btn-video-preview:hover {
+  background: rgba(248, 68, 68, 0.17);
+  border-color: rgba(248, 68, 68, 0.6);
+}
+.video-play-icon {
+  font-size: 11px;
+}
+.product-video-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-top: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: #000;
+}
+.product-video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.coming-soon-title {
+  color: var(--accent-gold);
+  font-family: var(--font-heading);
+  font-size: 23px;
+  font-weight: 900;
+  letter-spacing: 0.7px;
+  margin-bottom: 4px;
+}
+.card-availability-line.unavailable {
+  color: var(--accent-gold);
+}
+.card-availability-line.unavailable .avail-dot {
+  background: var(--accent-gold);
+}
+.btn-card-order.disabled,
+.btn-card-order.disabled:hover {
+  cursor: not-allowed;
+  opacity: 0.55;
+  color: var(--text-muted);
+  background: var(--bg-surface-elevated);
+  border-color: var(--border-subtle);
+  transform: none;
+  box-shadow: none;
+}

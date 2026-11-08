@@ -6,6 +6,8 @@ import PlatformIcon from './PlatformIcon';
 export default function ProductCard({ product, index, isPromo, onSelectProduct }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
+  const isUnavailable = product.availability === 'coming-soon';
 
   const defaultDuration =
     product?.durations?.find((d) => d.isDefault) ||
@@ -84,6 +86,31 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
           )}
         </div>
 
+        {product.videoPreviewId && (
+          <div className="product-video-preview">
+            <button
+              type="button"
+              className="btn-video-preview"
+              onClick={() => setShowVideo((current) => !current)}
+              aria-expanded={showVideo}
+            >
+              <span className="video-play-icon">▶</span>
+              <span>{showVideo ? 'Tutup Video Preview' : 'Tonton Video Preview'}</span>
+            </button>
+            {showVideo && (
+              <div className="product-video-frame">
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${product.videoPreviewId}?autoplay=1&rel=0`}
+                  title={`Video preview ${product.name}`}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                />
+              </div>
+            )}
+          </div>
+        )}
+
         {product.description && (
           <div className="card-description-box">
             <p className={`card-description-text ${showFullDesc ? 'expanded' : ''}`}>
@@ -103,7 +130,7 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
         )}
 
         {/* Duration Selector */}
-        {product.durations && product.durations.length > 0 && (
+        {!isUnavailable && product.durations && product.durations.length > 0 && (
           <div className="card-duration-selector">
             <span className="duration-selector-label">Pilihan Durasi Lisensi:</span>
             <div className="duration-options-grid">
@@ -126,7 +153,7 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
           </div>
         )}
 
-        <div className="card-price-block">
+        {!isUnavailable ? <div className="card-price-block">
           {hasActivePromo ? (
             <div>
               <div className="card-price-val">{activePromoPrice}</div>
@@ -144,9 +171,14 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
               </div>
             </div>
           )}
-        </div>
+        </div> : (
+          <div className="card-price-block coming-soon-price">
+            <div className="coming-soon-title">COMING SOON</div>
+            <div className="card-price-note">Produk sementara belum tersedia untuk dipesan.</div>
+          </div>
+        )}
 
-        <div className="card-availability-line">
+        <div className={`card-availability-line ${isUnavailable ? 'unavailable' : ''}`}>
           <span className="avail-dot"></span>
           <span>{product.slots || 'Aktivasi Instan via WhatsApp'}</span>
         </div>
@@ -195,11 +227,13 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
 
       <button
         type="button"
-        className="btn-card-order primary"
+        className={`btn-card-order primary ${isUnavailable ? 'disabled' : ''}`}
         onClick={handleOrder}
+        disabled={isUnavailable}
+        aria-disabled={isUnavailable}
       >
-        <span>Pesan {product.name}</span>
-        <ArrowRight size={15} />
+        <span>{isUnavailable ? 'Belum Tersedia' : `Pesan ${product.name}`}</span>
+        {!isUnavailable && <ArrowRight size={15} />}
       </button>
     </div>
   );

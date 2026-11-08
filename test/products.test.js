@@ -30,6 +30,9 @@ function runProductTests() {
   testAssert(Boolean(nexus), 'NEXUS INJECTOR exists in catalog');
   testAssert(Boolean(vortex), 'ZX VORTEX exists in catalog');
   testAssert(Boolean(insanity), 'INSANITY MAX exists in catalog');
+  testAssert(nexus.videoPreviewId === 'JDNKyn_BLWQ', 'NEXUS has its YouTube preview configured');
+  testAssert(vortex.videoPreviewId === 'j54yymyRbpQ', 'VORTEX has its YouTube preview configured');
+  testAssert(insanity.availability === 'coming-soon', 'INSANITY MAX is marked unavailable for ordering');
 
   // 2. Platform checks
   testAssert(nexus.platform === 'Android', 'NEXUS platform is Android');
