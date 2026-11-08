@@ -43,12 +43,12 @@ function runProductTests() {
 
   // 4. NEXUS durations & prices
   testAssert(Array.isArray(nexus.durations) && nexus.durations.length === 3, 'NEXUS has 3 duration options');
-  const nexus10 = nexus.durations.find((d) => d.label === '10 Hari');
-  const nexus18 = nexus.durations.find((d) => d.label === '18 Hari');
-  const nexusPerm = nexus.durations.find((d) => d.label === 'Permanen');
-  testAssert(nexus10?.price === 'Rp20.000', 'NEXUS 10 Hari is Rp20.000');
-  testAssert(nexus18?.price === 'Rp30.000', 'NEXUS 18 Hari is Rp30.000');
-  testAssert(nexusPerm?.price === 'Rp60.000', 'NEXUS Permanen is Rp60.000');
+  const nexus5 = nexus.durations.find((d) => d.label === '5 Hari');
+  const nexus13 = nexus.durations.find((d) => d.label === '13 Hari');
+  const nexusLifetime = nexus.durations.find((d) => d.label === 'Lifetime');
+  testAssert(nexus5?.price === 'Rp20.000', 'NEXUS 5 Hari is Rp20.000');
+  testAssert(nexus13?.price === 'Rp30.000', 'NEXUS 13 Hari is Rp30.000');
+  testAssert(nexusLifetime?.price === 'Rp85.000', 'NEXUS Lifetime is Rp85.000');
 
   // 5. VORTEX durations & prices
   testAssert(Array.isArray(vortex.durations) && vortex.durations.length === 3, 'VORTEX has 3 duration options');
