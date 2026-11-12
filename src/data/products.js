@@ -144,14 +144,13 @@ export const products = [
   },
   {
     id: 'insanity-max',
-    availability: 'coming-soon',
     name: 'INSANITY MAX',
-    version: 'v1.0',
+    version: 'v4.0',
     platform: 'iOS / iPhone',
     price: 'Rp250.000',
     promoPrice: null,
-    slots: 'BELUM TERSEDIA • COMING SOON',
-    badge: 'COMING SOON',
+    slots: 'TERSEDIA • PEMESANAN DIBUKA',
+    badge: 'AVAILABLE',
     license: 'PERMANEN / LIFETIME',
     compatibility: 'iOS 15 - iOS 27',
     durations: [
@@ -160,18 +159,18 @@ export const products = [
       { id: '20-days', label: '20 Hari', price: 'Rp150.000' },
       { id: 'permanent', label: 'Permanen', price: 'Rp250.000', isDefault: true },
     ],
-    description: 'Insanity Max adalah tools app khusus iOS/iPhone yang menggunakan sistem injector dan mekanisme konfigurasi terstruktur untuk mengoptimalkan berbagai parameter pada lingkungan perangkat dan game. Setiap konfigurasi diproses melalui sistem internal sebelum diterapkan, sehingga pengaturan dapat disesuaikan secara fleksibel dengan karakteristik perangkat dan kebutuhan pengguna. Dirancang dengan pendekatan optimasi yang terintegrasi untuk menghasilkan pengalaman gaming yang lebih stabil, responsif, smooth, dan konsisten tanpa mengubah sistem iOS secara permanen.',
+    description: 'Insanity Max iOS v4.0 adalah Web Clip dengan panel pengaturan, informasi perangkat, pilihan bahasa, serta sistem lisensi berbasis satu perangkat. Panel berjalan melalui Safari/Web Clip dan tidak mengubah memori game, mekanisme anti-cheat, FPS, atau cache sistem iOS.',
     features: [
-      'Dragshot Config',
-      'Assist Head',
-      'Tweak Config',
-      'FPS Booster',
-      'Smooth Aim',
-      'AImHead Settings',
-      'Optimize Recoil',
-      'Headlock 45%',
-      'Bypass Protection',
-      'Cache Cleaner',
+      'Tweaks',
+      'Informasi Device',
+      'Multi Bahasa (Indonesia, English, Spanyol, Portugis)',
+    ],
+    advantages: [
+      '1 Key 1 Device',
+      'Monitoring Lisensi oleh Admin',
+      'Non Root / Jailbreak',
+      'Tanpa Aplikasi Pihak Ketiga',
+      'Ringan sebagai Web Clip',
     ]
   }
 ];
