@@ -162,6 +162,12 @@ export const products = [
     description: 'Insanity Max iOS v4.0 adalah Web Clip dengan panel pengaturan, informasi perangkat, pilihan bahasa, serta sistem lisensi berbasis satu perangkat. Panel berjalan melalui Safari/Web Clip dan tidak mengubah memori game, mekanisme anti-cheat, FPS, atau cache sistem iOS.',
     features: [
       'Tweaks',
+      'Smooth Drag',
+      'Stabilizer Aim 20%',
+      'Protection Monitor',
+      'FPS Booster',
+      'Clear Cache System',
+      'Boost Game',
       'Informasi Device',
       'Multi Bahasa (Indonesia, English, Spanyol, Portugis)',
     ],
