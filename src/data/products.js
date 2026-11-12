@@ -159,7 +159,7 @@ export const products = [
       { id: '20-days', label: '20 Hari', price: 'Rp150.000' },
       { id: 'permanent', label: 'Permanen', price: 'Rp250.000', isDefault: true },
     ],
-    description: 'Insanity Max iOS v4.0 adalah Web Clip dengan panel pengaturan, informasi perangkat, pilihan bahasa, serta sistem lisensi berbasis satu perangkat. Panel berjalan melalui Safari/Web Clip dan tidak mengubah memori game, mekanisme anti-cheat, FPS, atau cache sistem iOS.',
+    description: 'INSANITY MAX iOS v4.0 menghadirkan panel konfigurasi dengan pilihan pengaturan, informasi perangkat, dukungan multi-bahasa, serta sistem lisensi satu perangkat. Dirancang dengan antarmuka ringkas, navigasi praktis, dan pemantauan sesi lisensi oleh admin. Fitur panel tidak mengubah memori internal game maupun mekanisme anti-cheat iOS.',
     features: [
       'Tweaks',
       'Smooth Drag',
