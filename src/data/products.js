@@ -176,7 +176,7 @@ export const products = [
       'Monitoring Lisensi oleh Admin',
       'Non Root / Jailbreak',
       'Tanpa Aplikasi Pihak Ketiga',
-      'Ringan sebagai Web Clip',
+      'Size Ringan dan Stabil',
     ]
   }
 ];
