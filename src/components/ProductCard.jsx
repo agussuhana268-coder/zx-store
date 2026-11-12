@@ -223,6 +223,20 @@ export default function ProductCard({ product, index, isPromo, onSelectProduct }
             </>
           )}
         </div>
+
+        {Array.isArray(product.advantages) && product.advantages.length > 0 && (
+          <div className="card-features-block card-advantages-block">
+            <span className="features-label">Keunggulan:</span>
+            <ul className="features-list">
+              {product.advantages.map((item, i) => (
+                <li key={i} className="feature-line">
+                  <Check size={15} className="feature-check-icon" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
       <button
