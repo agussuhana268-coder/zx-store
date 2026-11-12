@@ -164,7 +164,7 @@ export const products = [
       'Tweaks',
       'Smooth Drag',
       'Stabilizer Aim 20%',
-      'Protection Monitor',
+      'Bypass Protection',
       'FPS Booster',
       'Clear Cache System',
       'Boost Game',
